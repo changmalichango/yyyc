@@ -11,6 +11,7 @@ export default function MeScreen() {
       </Text>
 
       <Button title="Go to Register" onPress={() => router.push("/register")} />
+      <Button title="Login" onPress={() => router.push("/login")} />
     </View>
   );
 }
