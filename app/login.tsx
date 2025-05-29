@@ -1,7 +1,14 @@
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { auth } from "../authen/firebaseConfig";
 
 export default function LoginScreen() {
@@ -21,26 +28,46 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login </Text>
+      <Text style={styles.title}>Welcome Back!👋</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+      <View style={styles.containerTwo}>
+        <Text style={styles.subtext}>Email</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Example@email.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.containerThree}>
+        <Text style={styles.subtext}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+      </View>
 
-      <Button title="Log In" onPress={handleLogin} />
+      <View>
+        <TouchableOpacity>
+          <Text style={styles.forget}>Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        <TouchableOpacity>
+          <Text style={styles.button} onPress={handleLogin}>
+            Sign in
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* <Button style={styles.button} title="Log In" onPress={handleLogin} /> */}
     </View>
   );
 }
@@ -49,21 +76,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
-    backgroundColor: "#001f24",
+    backgroundColor: "black",
   },
+  containerTwo: {},
+  containerThree: {},
   title: {
-    fontSize: 28,
-    marginBottom: 24,
+    fontSize: 38,
+    fontWeight: "bold",
     color: "white",
-    textAlign: "center",
+    marginBottom: 100,
+    marginTop: 100,
+  },
+  subtext: {
+    fontSize: 15,
+    color: "white",
+    marginBottom: 5,
   },
   input: {
     borderWidth: 1,
     borderColor: "#bbdcf0",
+    backgroundColor: "black",
     color: "white",
-    borderRadius: 8,
-    padding: 10,
+    borderRadius: 10,
+    padding: 14,
     marginBottom: 16,
+  },
+  forget: {
+    color: "#73c2fb",
+    marginLeft: 270,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "#D5FFFF",
+    borderRadius: 8,
+    padding: 14,
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "bold",
   },
 });
