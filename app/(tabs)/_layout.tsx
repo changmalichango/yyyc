@@ -1,13 +1,13 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
-
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Platform } from "react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -47,9 +47,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="list"
+        options={{
+          title: "List",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="add-box" size={30} color="white" />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="chat"
         options={{
-          title: "chat",
+          title: "Chat",
           tabBarIcon: ({ color }) => (
             <Ionicons size={28} name="chatbox-ellipses-outline" color={color} />
           ),
@@ -58,7 +67,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="me"
         options={{
-          title: "me",
+          title: "Me",
           tabBarIcon: ({ color }) => (
             <Ionicons size={28} name="person" color={color} />
           ),

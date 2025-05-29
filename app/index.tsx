@@ -1,10 +1,6 @@
 import { useRouter } from "expo-router";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity
-} from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -15,7 +11,7 @@ export default function WelcomeScreen() {
         source={require("favion.png")} 
         style={styles.logo}
       /> */}
-       
+
       <Text style={styles.title}>CanIrent</Text>
       <Text style={styles.subtitle}>Your community, your connection</Text>
 
@@ -30,9 +26,7 @@ export default function WelcomeScreen() {
         style={[styles.button, styles.secondaryButton]}
         onPress={() => router.push("/register")}
       >
-        <Text style={[styles.buttonText, styles.secondaryText]}>
-          Register
-        </Text>
+        <Text style={[styles.buttonText, styles.secondaryText]}>Register</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

@@ -21,7 +21,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Login </Text>
 
       <TextInput
         style={styles.input}
@@ -46,11 +46,22 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: "center" },
-  title: { fontSize: 28, marginBottom: 24, textAlign: "center" },
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    backgroundColor: "#001f24",
+  },
+  title: {
+    fontSize: 28,
+    marginBottom: 24,
+    color: "white",
+    textAlign: "center",
+  },
   input: {
     borderWidth: 1,
-    borderColor: "#aaa",
+    borderColor: "#bbdcf0",
+    color: "white",
     borderRadius: 8,
     padding: 10,
     marginBottom: 16,

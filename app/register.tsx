@@ -17,26 +17,17 @@ export default function RegisterScreen() {
     }
   };
 
-  //   const handleRegister = () => {
-  //     if (!name || !email || !password) {
-  //       Alert.alert("Please fill out all fields");
-  //       return;
-  //     }
-
-  //     Alert.alert("Registered!", `Welcome, ${name}`);
-  //     // You can later connect this to your backend API here
-  //   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
 
-      <TextInput
+      {/* name, add in later  */}
+      {/* <TextInput
         style={styles.input}
         placeholder="Name"
         value={name}
         onChangeText={setName}
-      />
+      /> */}
 
       <TextInput
         style={styles.input}
@@ -64,16 +55,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
+    backgroundColor: "#001f24",
   },
   title: {
     fontSize: 28,
     marginBottom: 24,
     textAlign: "center",
+    color: "white",
   },
   input: {
     borderWidth: 1,
     borderColor: "#aaa",
     borderRadius: 8,
+    color: "white",
     padding: 10,
     marginBottom: 16,
   },
