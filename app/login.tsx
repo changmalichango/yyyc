@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   Alert,
+  ImageBackground,
   StyleSheet,
   Text,
   TextInput,
@@ -27,56 +28,70 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back!👋</Text>
+    <ImageBackground
+      source={require("../assets/images/loginbackground.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome Back!👋</Text>
 
-      <View style={styles.containerTwo}>
-        <Text style={styles.subtext}>Email</Text>
+        <View style={styles.containerTwo}>
+          <Text style={styles.subtext}>Email</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Example@email.com"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Example@email.com"
+            placeholderTextColor={"grey"}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={styles.containerThree}>
+          <Text style={styles.subtext}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={"grey"}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+        </View>
+
+        <View>
+          <TouchableOpacity>
+            <Text style={styles.forget}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <TouchableOpacity onPress={handleLogin}>
+            <Text style={styles.button}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* <Button style={styles.button} title="Log In" onPress={handleLogin} /> */}
       </View>
-      <View style={styles.containerThree}>
-        <Text style={styles.subtext}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-      </View>
-
-      <View>
-        <TouchableOpacity>
-          <Text style={styles.forget}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <TouchableOpacity>
-          <Text style={styles.button} onPress={handleLogin}>
-            Sign in
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* <Button style={styles.button} title="Log In" onPress={handleLogin} /> */}
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "black",
+    // justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   containerTwo: {},
   containerThree: {},
