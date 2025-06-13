@@ -1,3 +1,4 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
   Image,
@@ -5,6 +6,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -29,6 +32,26 @@ export default function ListingsScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      {/* ///////////////////////////////////// */}
+      {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
+      <View style={styles.title}>
+        <Image
+          source={require("../../assets/images/logo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.logoText}>CanIRent</Text>
+      </View>
+
+      {/* ///////////////////////////////////// */}
+      {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
+      <View style={styles.search}>
+        <FontAwesome name="search" size={24} style={styles.searchIcon} />
+        <TextInput placeholder="Search" style={{ width: "75%" }} />
+        <TouchableOpacity style={styles.searchBtn}>
+          <Text style={styles.btnText}>Go!</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView contentContainerStyle={styles.container}>
         {items.map((item) => (
           <View key={item.id} style={styles.card}>
@@ -47,6 +70,44 @@ export default function ListingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#fff" },
+  title: {
+    height: 40,
+    flexDirection: "row",
+  },
+  logo: {
+    resizeMode: "contain",
+    height: 40,
+    width: 40,
+    paddingLeft: 0,
+    marginLeft: 10,
+  },
+  logoText: {
+    fontWeight: "bold",
+    fontSize: 28,
+    color: "green",
+    paddingTop: 2,
+  },
+  search: {
+    height: 40,
+    width: "95%",
+    borderWidth: 2,
+    borderRadius: 20,
+    borderColor: "green",
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  searchIcon: { marginLeft: 10, color: "green", marginRight: 5 },
+  searchBtn: {
+    flex: 1,
+    backgroundColor: "green",
+    height: 37,
+    // width: 0,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnText: { color: "white", fontSize: 20, fontWeight: "600" },
   container: { padding: 16, alignItems: "center" },
   card: { marginBottom: 24, alignItems: "center" },
   image: { width: 150, height: 150 },

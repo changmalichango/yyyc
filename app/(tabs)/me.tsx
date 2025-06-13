@@ -8,7 +8,7 @@ export default function MeScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ color: "white", fontSize: 30 }}>
-        This is the Me function!!!!!!
+        This is the Me function!!!!!!!!!
       </Text>
 
       <Button title="Go to Register" onPress={() => router.push("/register")} />
