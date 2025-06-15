@@ -2,10 +2,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-  Image,
+  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
@@ -30,28 +31,74 @@ export default function MeScreen() {
       /////////////////////////////////////////////////////////////////////////// */}
       <View style={styles.picBox}>
         <LinearGradient
-          colors={["transparent", "transparent"]}
-          start={[1, 0]}
-          end={[1, 1]}
-          style={styles.circleOutside}
+          colors={["#037d50", "transparent"]}
+          start={[0, 0]}
+          end={[0, 1]}
+          style={[styles.circleOutside, styleColor]}
         >
-          <View style={styles.circleInside}>
-            <View style={styles.circleTrans}>
-              <Image
-                source={require("../../assets/images/bike.png")}
-                style={styles.profilePic}
-              />
-            </View>
+          <View style={[styles.circleInside, styleColor]}>
+            <LinearGradient
+              colors={["#037d50", "transparent"]}
+              start={[0, 0]}
+              end={[0, 1]}
+              style={[styles.circleOutside2, styleColor]}
+            >
+              <View style={[styles.circleInside2, styleColor]}>
+                <LinearGradient
+                  colors={["green", "transparent"]}
+                  start={[0, 0]}
+                  end={[0, 1]}
+                  style={styles.circletrans}
+                >
+                  <ImageBackground
+                    source={require("../../assets/images/bike.png")}
+                    style={styles.picture}
+                  ></ImageBackground>
+                </LinearGradient>
+              </View>
+            </LinearGradient>
           </View>
         </LinearGradient>
       </View>
-    </SafeAreaView>
 
-    // {/* <Button
-    //     title="Go to Register"
-    //     onPress={() => router.push("/register")}
-    //   />
-    //   <Button title="Login" onPress={() => router.push("/login")} /> */}
+      {/* //////////////////////////////////////////////////////////////////
+USER NAME AND EMAIL */}
+
+      <View style={{ alignItems: "center", marginTop: 10 }}>
+        <Text style={[{ fontWeight: "bold", fontSize: 25 }, textColor]}>
+          yy
+        </Text>
+        <Text style={{ marginTop: 5, color: "grey", fontSize: 20 }}>
+          yy@email.com
+        </Text>
+        <Text></Text>
+      </View>
+      {/* ////////////////////////////////////////////////////////////////////////////
+      List */}
+
+      <View>
+        <TouchableOpacity>
+          <View style={styles.functionBox}>
+            <Text>Favourtes</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.functionBox}>
+            <Text>Favourtes</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.functionBox}>
+            <Text>Favourtes</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.functionBox}>
+            <Text>Favourtes</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -62,41 +109,68 @@ const styles = StyleSheet.create({
   lightText: { color: "white" },
   container: {
     flex: 1,
-    // justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "blue",
   },
   titleBox: { alignItems: "center", marginTop: 20 },
   titleText: { fontWeight: "bold", fontSize: 20 },
 
   picBox: { alignItems: "center", marginTop: 20 },
   circleOutside: {
-    // backgroundColor: "green",
     height: 150,
     width: 150,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "green",
-    borderWidth: 2,
+    padding: 0,
     borderRadius: 75,
   },
   circleInside: {
+    height: 145,
+    width: 145,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circleOutside2: {
     height: 120,
     width: 120,
+    alignItems: "center",
+    justifyContent: "center",
     borderColor: "green",
+    padding: 0,
+
+    borderRadius: 75,
+  },
+  circleInside2: {
+    height: 115,
+    width: 115,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circletrans: {
+    height: 100,
+    width: 100,
+    borderColor: "#f6f6f6",
     borderWidth: 2,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
   },
-  circleTrans: {
+  picture: {
     height: 100,
     width: 100,
-    // borderColor: "transparent",
-    borderWidth: 2,
-    borderRadius: 100,
-    backgroundColor: "transparent",
-    color: "transparent",
   },
   profilePic: { height: 70, resizeMode: "contain", borderRadius: 100 },
+
+  functionBox: {
+    // backgroundColor: "blue",
+    width: 400,
+    height: 40,
+    borderWidth: 2,
+    borderColor: "grey",
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+  },
 });
