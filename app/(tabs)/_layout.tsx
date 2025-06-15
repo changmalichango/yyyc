@@ -51,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "List",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="add-box" size={30} color="white" />
+            <MaterialIcons name="add-box" size={30} color="green" />
           ),
         }}
       />

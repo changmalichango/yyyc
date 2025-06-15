@@ -9,9 +9,14 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
 
 export default function ListingsScreen() {
+  const colorScheme = useColorScheme();
+  const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
+  const themeStyle =
+    colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const items = [
     {
       id: "bike",
@@ -31,7 +36,7 @@ export default function ListingsScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, themeStyle]}>
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
       <View style={styles.title}>
@@ -60,7 +65,7 @@ export default function ListingsScreen() {
               style={styles.image}
               resizeMode="contain"
             />
-            <Text style={styles.label}>{item.title}</Text>
+            <Text style={[styles.label, textTheme]}>{item.title}</Text>
           </View>
         ))}
       </ScrollView>
@@ -69,7 +74,13 @@ export default function ListingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#fff" },
+  safe: {
+    flex: 1,
+  },
+  lightColor: { backgroundColor: "#fff" },
+  darkColor: { backgroundColor: "black" },
+  textDark: { color: "black" },
+  textLight: { color: "white" },
   title: {
     height: 40,
     flexDirection: "row",
@@ -108,7 +119,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   btnText: { color: "white", fontSize: 20, fontWeight: "600" },
-  container: { padding: 16, alignItems: "center" },
+  container: {
+    padding: 16,
+    height: "95%",
+    alignItems: "center",
+    // backgroundColor: "blue",
+  },
   card: { marginBottom: 24, alignItems: "center" },
   image: { width: 150, height: 150 },
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
