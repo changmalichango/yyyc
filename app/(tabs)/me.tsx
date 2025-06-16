@@ -11,6 +11,8 @@ import {
   View,
 } from "react-native";
 
+import { Feather } from "@expo/vector-icons";
+
 export default function MeScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -76,25 +78,56 @@ USER NAME AND EMAIL */}
       {/* ////////////////////////////////////////////////////////////////////////////
       List */}
 
-      <View>
+      <View style={{ marginTop: 40 }}>
         <TouchableOpacity>
           <View style={styles.functionBox}>
-            <Text>Favourtes</Text>
+            <Feather name="edit" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Edit Profile</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity>
           <View style={styles.functionBox}>
-            <Text>Favourtes</Text>
+            <Feather name="heart" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Favourtes</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity>
           <View style={styles.functionBox}>
-            <Text>Favourtes</Text>
+            <Feather name="book-open" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Order History</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity>
           <View style={styles.functionBox}>
-            <Text>Favourtes</Text>
+            <Feather name="log-out" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Log Out</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -164,13 +197,32 @@ const styles = StyleSheet.create({
   profilePic: { height: 70, resizeMode: "contain", borderRadius: 100 },
 
   functionBox: {
-    // backgroundColor: "blue",
+    // backgroundColor: "#aaaaaa",
     width: 400,
-    height: 40,
-    borderWidth: 2,
+    height: 60,
+    // borderWidth: 1,
     borderColor: "grey",
     borderRadius: 10,
-    marginTop: 20,
+    // marginTop: 20,
     alignItems: "center",
+    // justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  boxText: {
+    alignSelf: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+    paddingLeft: 20,
+    marginRight: 170,
+
+    width: 130,
+  },
+  icons: {
+    color: "#E2D7AB",
+    marginLeft: 15,
+    backgroundColor: "#0F4415",
+    borderWidth: 10,
+    borderRadius: 100,
+    borderColor: "#0F4415",
   },
 });
