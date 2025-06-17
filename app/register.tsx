@@ -1,4 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -8,12 +9,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../authen/firebaseConfig";
+import { auth, database } from "../authen/firebaseConfig";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const collectionRef = collection(database, "users");
 
   const handleRegister = async () => {
     try {
@@ -24,6 +27,14 @@ export default function RegisterScreen() {
     }
   };
 
+  const storeRegister = () => {
+    addDoc(collectionRef, {
+      name: name,
+      email: email,
+      password: password,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -31,12 +42,16 @@ export default function RegisterScreen() {
       </View>
 
       {/* name, add in later  */}
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      /> */}
+      <View>
+        <Text>Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          placeholderTextColor={"black"}
+        />
+      </View>
       <View>
         <Text style={styles.subtext}>Email</Text>
         <TextInput
@@ -61,7 +76,11 @@ export default function RegisterScreen() {
         />
       </View>
       <View>
-        <TouchableOpacity onPress={handleRegister}>
+        <TouchableOpacity
+          onPress={() => {
+            handleRegister(), storeRegister();
+          }}
+        >
           <Text style={styles.button}>Sign in</Text>
         </TouchableOpacity>
       </View>

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../authen/firebaseConfig";
+import { auth, database } from "../authen/firebaseConfig";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
