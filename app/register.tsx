@@ -10,7 +10,7 @@ import {
 import { supabase } from "../authen/supabase";
 
 export default function RegisterScreen() {
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,7 +38,7 @@ export default function RegisterScreen() {
       </View>
 
       {/* name, add in later  */}
-      <View>
+      {/* <View>
         <Text>Name</Text>
         <TextInput
           style={styles.input}
@@ -47,7 +47,7 @@ export default function RegisterScreen() {
           onChangeText={setName}
           placeholderTextColor={"black"}
         />
-      </View>
+      </View> */}
       <View>
         <Text style={styles.subtext}>Email</Text>
         <TextInput
