@@ -1,10 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
-  Dimensions,
-  FlatList,
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -18,31 +17,29 @@ export default function ListingsScreen() {
   const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeStyle =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
- 
-
-  const stuff: items[] = [
+  const items = [
     {
-      id: 'bike',
-      title: 'Bike',
+      id: "bike",
+      title: "Bike",
+      image: require("../../assets/images/bike.png"),
     },
     {
-      id: 'guitar',
-      title: 'Guitar',
-    }, 
+      id: "guitar",
+      title: "Guitar",
+      image: require("../../assets/images/guitar.png"),
+    },
     {
-      id: 'shoe',
-      title: 'Shoe',
-    }, 
+      id: "shoe",
+      title: "Shoe",
+      image: require("../../assets/images/shoe.png"),
+    },
   ];
-
-  type items = {
-    id: string;
-    title: string;
-  }
-
-  const Item = ({title}: items) => (
-    <View style= {styles.itemTitle}>
-      <Text style= {styles.itemTitle}>{title}</Text>
+  const renderIteming = ({item}: { item: any}) => (
+    <View style={styles.itemCard}>
+      <Image source={item.image} style= {styles.image} />,
+      <Text> style={styles.itemTitle}{item.title}</Text>
+      <Text> style={[styles.price, textTheme]}${item.price}</Text>
+      <Text style={[styles.username, textTheme]}>@{item.username}</Text>
     </View>
   )
 
@@ -69,36 +66,101 @@ export default function ListingsScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      
+     <ScrollView contentContainerStyle = {[styles.scrollview, {paddingBottom: 100}]}>
+      <View style={styles.bottomSection}>
+        <View style= {{width: '48%', marginBottom: 16 }}>  
+          <Image
+          source = {require("../../assets/images/bike.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>bike</Text>
+          <Text style= {styles.price}>$20</Text>
+          <Text style= {styles.username}>@yyy143</Text>
+        </View>
 
-      <View style= {[styles.bottomSection, themeStyle]}>
-        <FlatList 
-          data={stuff}
-          numColumns={2}
-          renderItem={({item}) => <Item title={stuff.title}/>}
-          keyExtractor={stuff => stuff.id}
-        />  
-      </View> 
-    </SafeAreaView>
+        <View>  
+          <Image
+          source = {require("../../assets/images/guitar.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>guitar</Text>
+          <Text style= {styles.price}>$2100</Text>
+          <Text style= {styles.username}>@yc</Text>
+        </View>
+
+        <View>  
+          <Image
+          source = {require("../../assets/images/shoe.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>shoe</Text>
+          <Text style= {styles.price}>$21</Text>
+          <Text style= {styles.username}>@ygay</Text>
+        </View>
+
+        <View>  
+          <Image
+          source = {require("../../assets/images/eiffertower.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>eiffel tower</Text>
+          <Text style= {styles.price}>$69</Text>
+          <Text style= {styles.username}>@tzefoong</Text>
+        </View>
+
+        <View>  
+          <Image
+          source = {require("../../assets/images/sky.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>sky</Text>
+          <Text style= {styles.price}>$21</Text>
+          <Text style= {styles.username}>@michelle</Text>
+        </View>
+        <View>  
+          <Image
+          source = {require("../../assets/images/sky.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>sky</Text>
+          <Text style= {styles.price}>$21</Text>
+          <Text style= {styles.username}>@michelle</Text>
+        </View>
+        <View>  
+          <Image
+          source = {require("../../assets/images/sky.png")} 
+          style={styles.itemDimension}
+          /> 
+          <Text style= {styles.itemTitle}>sky</Text>
+          <Text style= {styles.price}>$21</Text>
+          <Text style= {styles.username}>@michelle</Text>
+        </View>
+      </View>
+
+      
+      </ScrollView>
+
+</SafeAreaView>
   );
- };
-
-
-const screenWidth = Dimensions.get('window' as 'window').width;
-const itemWidth = (screenWidth - 32) / 2;
+}
 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
   },
-  scrollview: {
+  scrollView: {
     padding: 20,
   },
   topSection: {
     padding: 20,
   },
   bottomSection: {
-    flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 12,
+    rowGap: 24,
   },
   leftHalf: {
     flex: 1,
@@ -109,31 +171,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 16
+    padding: 10,
   },
   itemCard:{
-    width: itemWidth,
-    margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
     alignItems: 'center',
-    elevation: 2,
+    width: '48%',
+    marginBottom: 16,
   },
   itemTitle: {
     fontWeight: 'bold',
-    fontSize: 100,
+    fontSize: 25,
     color: 'black',
     paddingTop: 2,
+    marginLeft: 60
   },
-  itemPrice: {
-    fontSize:16,
+  price: {
+    fontSize:20,
     color: '#28a745',
     fontWeight: 600,
+    marginLeft: 60,
   },
   username:{
-    fontSize: 12,
+    fontSize: 15,
     color: '#888',
+    marginLeft: 60,
   },
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
@@ -183,12 +244,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "blue",
   },
-  image: {
-    width: '100%',
-    height: 120,
-    borderRadius: 8,
+  card: { marginBottom: 24, alignItems: "center" },
+  image: { width: 150, height: 150 },
+  label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
+  itemDimension: {
+    resizeMode: "contain",
+    height: 150,
+    width: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 50
   },
-  });
+});
 
 
 /*      <ScrollView contentContainerStyle = {styles.scrollview}>
@@ -218,32 +285,4 @@ const styles = StyleSheet.create({
           <Text style={styles.username}> @yy134</Text>    
         </View>
       </ScrollView>
-
-      const stuff: items[] = [
-    {
-      id: 'bike',
-      title: 'Bike',
-      price: 20,
-      username: 'yy143',
-      image: require("../../assets/images/bike.png"),
-    },
-    {
-      id: 'guitar',
-      title: 'Guitar',
-      price: 100,
-      username: 'gaiboy',
-      image: require("../../assets/images/guitar.png"),
-    }, 
-    {
-      id: 'shoe',
-      title: 'Shoe',
-      price: 43,
-      username: 'yc',
-      image: require("../../assets/images/shoe.png"),
-    }, 
-  ];
-
-  price: number;
-    username: string;
-    image: any;
 */
