@@ -1,5 +1,7 @@
+import { database } from "@/authen/firebaseConfig";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import React from "react";
 import {
   ImageBackground,
@@ -12,6 +14,7 @@ import {
 } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
+import { auth } from "../../authen/firebaseConfig";
 
 export default function MeScreen() {
   const router = useRouter();
@@ -19,7 +22,31 @@ export default function MeScreen() {
   const styleColor =
     colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
   const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
+  const collectionRef = collection(database, "users");
 
+  const getData = () => {
+    getDocs(collectionRef).then((response) => {
+      console.log(
+        response.docs.map((item) => {
+          return { ...item.data() };
+        })
+      );
+    });
+  };
+
+  const updateData = () => {
+    const docToUpdate = doc(database, "users", "loTIjMbZ1BgU7hR05UfE");
+    updateDoc(docToUpdate, {
+      email: "yyyyy",
+      password: "aaaaa",
+    });
+  };
+
+  const myUid = () => {
+    const user = auth.currentUser;
+    const uid = user?.uid;
+    console.log(uid);
+  };
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
       {/* TITLE BOX
@@ -75,11 +102,12 @@ USER NAME AND EMAIL */}
         </Text>
         <Text></Text>
       </View>
+
       {/* ////////////////////////////////////////////////////////////////////////////
-      List */}
+      EDIT PROFILE */}
 
       <View style={{ marginTop: 40 }}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={myUid}>
           <View style={styles.functionBox}>
             <Feather name="edit" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Edit Profile</Text>
@@ -92,6 +120,9 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* 
+        FAV 
+        ////////////////////////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="heart" size={24} style={styles.icons} />
@@ -105,6 +136,9 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* 
+        Order HISTORY
+        /////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="book-open" size={24} style={styles.icons} />
@@ -118,6 +152,8 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* LOG OUT
+        ///////////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="log-out" size={24} style={styles.icons} />

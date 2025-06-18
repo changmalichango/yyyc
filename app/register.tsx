@@ -1,4 +1,3 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   Alert,
@@ -8,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../authen/firebaseConfig";
+import { supabase } from "../authen/supabase";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
@@ -16,11 +15,19 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
 
   const handleRegister = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Success", "User registered!");
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      if (error.message.includes("User already registered")) {
+        Alert.alert("Email already in use.");
+      } else {
+        Alert.alert("Signup failed:", error.message);
+      }
+    } else {
+      Alert.alert("Success");
     }
   };
 
@@ -31,12 +38,16 @@ export default function RegisterScreen() {
       </View>
 
       {/* name, add in later  */}
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      /> */}
+      <View>
+        <Text>Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          placeholderTextColor={"black"}
+        />
+      </View>
       <View>
         <Text style={styles.subtext}>Email</Text>
         <TextInput

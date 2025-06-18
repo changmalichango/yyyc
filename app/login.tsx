@@ -1,5 +1,5 @@
+import { supabase } from "@/authen/supabase";
 import { useRouter } from "expo-router";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   Alert,
@@ -10,20 +10,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../authen/firebaseConfig";
-
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
       Alert.alert("Success", "Logged in!");
       router.replace("/me");
-    } catch (error: any) {
-      Alert.alert("Login Error", error.message);
     }
   };
 
