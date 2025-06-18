@@ -2,16 +2,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
   Dimensions,
+  FlatList,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  useColorScheme,
-  FlatList,
+  useColorScheme
 } from "react-native";
 
 export default function ListingsScreen() {
@@ -19,39 +18,33 @@ export default function ListingsScreen() {
   const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeStyle =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  type Stuff = [
-    id: string,
-    title: string,
-    price: number,
-    username: string,
-    image: any,
+ 
+
+  const stuff: items[] = [
+    {
+      id: 'bike',
+      title: 'Bike',
+    },
+    {
+      id: 'guitar',
+      title: 'Guitar',
+    }, 
+    {
+      id: 'shoe',
+      title: 'Shoe',
+    }, 
   ];
 
-
-const items: Stuff[] = [
-  {
-      id: 'bike'
-      title: "Bike",
-      price: 20,
-      username: 'yy143',
-      image: require("../../assets/images/bike.png"),
+  type items = {
+    id: string;
+    title: string;
   }
-]
 
-  const ItemGrid: React.FC<Props> = ({items}) => {
-    const renderItem = ({item}: {item: items}) => (
-      <View style={styles.itemCard}>
-      <Image source={item.image} style= {styles.image} />,
-      <Text> style={styles.itemTitle}{item.title}</Text>
-      <Text> style={[styles.itemPrice, textTheme]}${item.price}</Text>
-      <Text style={[styles.username, textTheme]}>@{item.username}</Text>
+  const Item = ({title}: items) => (
+    <View style= {styles.itemTitle}>
+      <Text style= {styles.itemTitle}>{title}</Text>
     </View>
-    );
-
-    
-  };
- 
-  
+  )
 
   return (
     <SafeAreaView style={[styles.safe, themeStyle]}>
@@ -77,9 +70,18 @@ const items: Stuff[] = [
         </View>
       </View>
 
-</SafeAreaView>
+      <View style= {[styles.bottomSection, themeStyle]}>
+        <FlatList 
+          data={stuff}
+          numColumns={2}
+          renderItem={({item}) => <Item title={stuff.title}/>}
+          keyExtractor={stuff => stuff.id}
+        />  
+      </View> 
+    </SafeAreaView>
   );
-}
+ };
+
 
 const screenWidth = Dimensions.get('window' as 'window').width;
 const itemWidth = (screenWidth - 32) / 2;
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 100,
     color: 'black',
     paddingTop: 2,
   },
@@ -216,4 +218,32 @@ const styles = StyleSheet.create({
           <Text style={styles.username}> @yy134</Text>    
         </View>
       </ScrollView>
+
+      const stuff: items[] = [
+    {
+      id: 'bike',
+      title: 'Bike',
+      price: 20,
+      username: 'yy143',
+      image: require("../../assets/images/bike.png"),
+    },
+    {
+      id: 'guitar',
+      title: 'Guitar',
+      price: 100,
+      username: 'gaiboy',
+      image: require("../../assets/images/guitar.png"),
+    }, 
+    {
+      id: 'shoe',
+      title: 'Shoe',
+      price: 43,
+      username: 'yc',
+      image: require("../../assets/images/shoe.png"),
+    }, 
+  ];
+
+  price: number;
+    username: string;
+    image: any;
 */
