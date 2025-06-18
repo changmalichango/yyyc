@@ -1,5 +1,3 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -9,30 +7,28 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth, database } from "../authen/firebaseConfig";
+import { supabase } from "../authen/supabase";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const collectionRef = collection(database, "users");
-
   const handleRegister = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Success", "User registered!");
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    }
-  };
-
-  const storeRegister = () => {
-    addDoc(collectionRef, {
-      name: name,
-      email: email,
-      password: password,
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
     });
+
+    if (error) {
+      if (error.message.includes("User already registered")) {
+        Alert.alert("Email already in use.");
+      } else {
+        Alert.alert("Signup failed:", error.message);
+      }
+    } else {
+      Alert.alert("Success");
+    }
   };
 
   return (
@@ -76,11 +72,7 @@ export default function RegisterScreen() {
         />
       </View>
       <View>
-        <TouchableOpacity
-          onPress={() => {
-            handleRegister(), storeRegister();
-          }}
-        >
+        <TouchableOpacity onPress={handleRegister}>
           <Text style={styles.button}>Sign in</Text>
         </TouchableOpacity>
       </View>

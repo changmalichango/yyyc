@@ -14,6 +14,7 @@ import {
 } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
+import { auth } from "../../authen/firebaseConfig";
 
 export default function MeScreen() {
   const router = useRouter();
@@ -39,6 +40,12 @@ export default function MeScreen() {
       email: "yyyyy",
       password: "aaaaa",
     });
+  };
+
+  const myUid = () => {
+    const user = auth.currentUser;
+    const uid = user?.uid;
+    console.log(uid);
   };
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
@@ -95,11 +102,12 @@ USER NAME AND EMAIL */}
         </Text>
         <Text></Text>
       </View>
+
       {/* ////////////////////////////////////////////////////////////////////////////
-      List */}
+      EDIT PROFILE */}
 
       <View style={{ marginTop: 40 }}>
-        <TouchableOpacity onPress={getData}>
+        <TouchableOpacity onPress={myUid}>
           <View style={styles.functionBox}>
             <Feather name="edit" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Edit Profile</Text>
@@ -112,6 +120,9 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* 
+        FAV 
+        ////////////////////////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="heart" size={24} style={styles.icons} />
@@ -125,6 +136,9 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* 
+        Order HISTORY
+        /////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="book-open" size={24} style={styles.icons} />
@@ -138,6 +152,8 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* LOG OUT
+        ///////////////////////////////////////////////////////////// */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="log-out" size={24} style={styles.icons} />
