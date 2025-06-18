@@ -1,15 +1,10 @@
-import FontAwesome from "@expo/vector-icons/build/FontAwesome";
 import React from "react";
 import {
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   View,
   useColorScheme,
-  SafeAreaView,
-  TextInput,
-  TouchableOpacity,
 } from "react-native";
 
 export default function ListingsScreen() {
@@ -17,11 +12,17 @@ export default function ListingsScreen() {
   const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeStyle =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
+<<<<<<< HEAD
+
+=======
+  
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
   type Props = {
     title: string;
     price: number;
     username: string;
     image: any;
+<<<<<<< HEAD
   };
 
   const Card: React.FC<Props> = ({ title, price, username, image }) => (
@@ -31,11 +32,24 @@ export default function ListingsScreen() {
         <Text style={styles.itemTitle}>{title}</Text>
         <Text style={styles.price}>${price}</Text>
       </View>
+=======
+  }
+
+  const Card: React.FC<Props> = ({title, price, username, image}) => (
+    <View style={styles.card}> 
+      <Image source={image} style={styles.image} />
+      <View style={styles.titleRow}>
+        <Text style={styles.itemTitle}>{title}</Text>
+        <Text style={styles.price}>${price}</Text>  
+      </View>    
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
       <Text style={styles.username}>@{username}</Text>
     </View>
   );
 
+<<<<<<< HEAD
   return (
+<<<<<<< HEAD
     <SafeAreaView style={[styles.safe, themeStyle]}>
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
@@ -72,7 +86,26 @@ export default function ListingsScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+=======
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.bottomSection}>
+        <Card
+          title= "Bike"
+          price= {30}
+          username= "yy143"
+          image={require('../../assets/images/bike.png')}
+        />  
+      </View>
+    </ScrollView>
+  )
+
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
+=======
+  return 
+  
+>>>>>>> a9a87a5 (homebase base)
 }
+
 
 const styles = StyleSheet.create({
   safe: {
@@ -85,6 +118,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   bottomSection: {
+<<<<<<< HEAD
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "flex-start",
@@ -136,6 +170,59 @@ const styles = StyleSheet.create({
   rightHalf: {
     flex: 1,
   },
+=======
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 12,
+    rowGap: 24,
+  },
+  listContainer: {
+    padding: 10,
+  },
+  itemCard:{
+    width: '46%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    marginRight: 10,
+    elevation: 2,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemTitle: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: 'black',
+    paddingTop: 2,
+    marginLeft: 60
+  },
+  price: {
+    fontSize:20,
+    color: '#28a745',
+    fontWeight: 600,
+    marginLeft: 60,
+  },
+  username:{
+    fontSize: 15,
+    color: '#888',
+    marginLeft: 60,
+  },
+  scrollview: {
+    padding: 20,
+  },
+  leftHalf: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: 'center',
+  },
+  rightHalf: {
+    flex: 1,
+  },
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
   textDark: { color: "black" },
@@ -185,14 +272,26 @@ const styles = StyleSheet.create({
     // backgroundColor: "blue",
   },
   card: { marginBottom: 24, alignItems: "center" },
+<<<<<<< HEAD
   image: { width: "100%", height: 120, borderRadius: 8, marginBottom: 6 },
+=======
+  image: { width: '100%', height: 120, borderRadius: 8, marginBottom: 6},
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
   itemDimension: {
     resizeMode: "contain",
     height: 150,
     width: 150,
+<<<<<<< HEAD
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 50,
   },
 });
+=======
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 50
+  },
+});
+>>>>>>> 92afa5ff05934c3002a97e6fffc83dd0356192b1
