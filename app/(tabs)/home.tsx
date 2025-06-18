@@ -1,15 +1,10 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
-  useColorScheme
   useColorScheme
 } from "react-native";
 
@@ -18,177 +13,40 @@ export default function ListingsScreen() {
   const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeStyle =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  const items = [
-    {
-      id: "bike",
-      title: "Bike",
-      image: require("../../assets/images/bike.png"),
-    },
-    {
-      id: "guitar",
-      title: "Guitar",
-      image: require("../../assets/images/guitar.png"),
-    },
-    {
-      id: "shoe",
-      title: "Shoe",
-      image: require("../../assets/images/shoe.png"),
-    },
-  ];
-  const renderIteming = ({item}: { item: any}) => (
-    <View style={styles.itemCard}>
-      <Image source={item.image} style= {styles.image} />,
-      <Text> style={styles.itemTitle}{item.title}</Text>
-      <Text> style={[styles.price, textTheme]}${item.price}</Text>
-      <Text style={[styles.username, textTheme]}>@{item.username}</Text>
-    </View>
-  )
-  const renderIteming = ({item}: { item: any}) => (
-    <View style={styles.itemCard}>
-      <Image source={item.image} style= {styles.image} />,
-      <Text> style={styles.itemTitle}{item.title}</Text>
-      <Text> style={[styles.price, textTheme]}${item.price}</Text>
-      <Text style={[styles.username, textTheme]}>@{item.username}</Text>
+  
+  type Props = {
+    title: string;
+    price: number;
+    username: string;
+    image: any;
+  }
+
+  const Card: React.FC<Props> = ({title, price, username, image}) => (
+    <View style={styles.card}> 
+      <Image source={image} style={styles.image} />
+      <View style={styles.titleRow}>
+        <Text style={styles.itemTitle}>{title}</Text>
+        <Text style={styles.price}>${price}</Text>  
+      </View>    
+      <Text style={styles.username}>@{username}</Text>
     </View>
   )
 
   return (
-    <SafeAreaView style={[styles.safe, themeStyle]}>
-      {/* ///////////////////////////////////// */}
-      {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
-      <View style ={styles.topSection}>
-        <View style={styles.logoTitle}>
-          <Image
-            source={require("../../assets/images/logo.png")}
-            style={styles.logo}
-          />
-          <Text style={styles.logoText}>CanIRent</Text>
-        </View>
-      <View style ={styles.topSection}>
-        <View style={styles.title}>
-          <Image
-            source={require("../../assets/images/logo.png")}
-            style={styles.logo}
-          />
-          <Text style={styles.logoText}>CanIRent</Text>
-        </View>
-
-        {/* ///////////////////////////////////// */}
-        {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
-        <View style={styles.search}>
-          <FontAwesome name="search" size={24} style={styles.searchIcon} />
-          <TextInput placeholder="Search" style={{ width: "75%" }} />
-          <TouchableOpacity style={styles.searchBtn}>
-            <Text style={styles.btnText}>Go!</Text>
-          </TouchableOpacity>
-        </View>
-        {/* ///////////////////////////////////// */}
-        {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
-        <View style={styles.search}>
-          <FontAwesome name="search" size={24} style={styles.searchIcon} />
-          <TextInput placeholder="Search" style={{ width: "75%" }} />
-          <TouchableOpacity style={styles.searchBtn}>
-            <Text style={styles.btnText}>Go!</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      
-     <ScrollView contentContainerStyle = {[styles.scrollView, {paddingBottom: 100}]}>
+    <ScrollView contentContainerStyle={styles.scrollView}>
       <View style={styles.bottomSection}>
-        <View style= {{width: '48%', marginBottom: 16 }}>  
-          <Image
-          source = {require("../../assets/images/bike.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>bike</Text>
-          <Text style= {styles.price}>$20</Text>
-          <Text style= {styles.username}>@yyy143</Text>
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/guitar.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>guitar</Text>
-          <Text style= {styles.price}>$2100</Text>
-          <Text style= {styles.username}>@yc</Text>
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/shoe.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>shoe</Text>
-          <Text style= {styles.price}>$21</Text>
-          <Text style= {styles.username}>@ygay</Text>
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/eiffertower.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>eiffel tower</Text>
-          <Text style= {styles.price}>$69</Text>
-          <Text style= {styles.username}>@tzefoong</Text>
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/sky.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>sky</Text>
-          <Text style= {styles.price}>$21</Text>
-          <Text style= {styles.username}>@michelle</Text>
-        </View>
-        <View>  
-          <Image
-          source = {require("../../assets/images/sky.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>sky</Text>
-          <Text style= {styles.price}>$21</Text>
-          <Text style= {styles.username}>@michelle</Text>
-        </View>
-        <View>  
-          <Image
-          source = {require("../../assets/images/sky.png")} 
-          style={styles.itemDimension}
-          /> 
-          <Text style= {styles.itemTitle}>sky</Text>
-          <Text style= {styles.price}>$21</Text>
-          <Text style= {styles.username}>@michelle</Text>
-        </View>
+        <Card
+          title= "Bike"
+          price= {30}
+          username= "yy143"
+          image={require('../../assets/images/bike.png')}
+        />  
       </View>
+    </ScrollView>
+  )
 
-      
-      
-     <ScrollView contentContainerStyle = {styles.scrollview}>
-      <View style={styles.bottomSection}>
-        <View>  
-          <Image
-          source = {require("../../assets/images/bike.png")} 
-          style={styles.bike}
-          /> 
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/guitar.png")} 
-          style={styles.guitar}
-          /> 
-        </View>
-      </View>
-      </ScrollView>
-
-</SafeAreaView>
-
-</SafeAreaView>
-  );
 }
+
 
 const styles = StyleSheet.create({
   safe: {
@@ -211,9 +69,17 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemCard:{
-    alignItems: 'center',
-    width: '48%',
-    marginBottom: 16,
+    width: '46%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    marginRight: 10,
+    elevation: 2,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   itemTitle: {
     fontWeight: 'bold',
@@ -236,13 +102,6 @@ const styles = StyleSheet.create({
   scrollview: {
     padding: 20,
   },
-  topSection: {
-    padding: 20,
-  },
-  bottomSection: {
-    flex: 1,
-    flexDirection: "row",
-  },
   leftHalf: {
     flex: 1,
     justifyContent: "center",
@@ -250,27 +109,6 @@ const styles = StyleSheet.create({
   },
   rightHalf: {
     flex: 1,
-  },
-  listContainer: {
-    padding: 10,
-  },
-  itemCard:{
-    alignItems: 'center',
-  },
-  itemTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'black',
-    paddingTop: 2,
-  },
-  price: {
-    fontSize:16,
-    color: '#28a745',
-    fontWeight: 600,
-  },
-  username:{
-    fontSize: 12,
-    color: '#888',
   },
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
@@ -321,7 +159,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "blue",
   },
   card: { marginBottom: 24, alignItems: "center" },
-  image: { width: 150, height: 150 },
+  image: { width: '100%', height: 120, borderRadius: 8, marginBottom: 6},
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
   itemDimension: {
     resizeMode: "contain",
@@ -332,80 +170,3 @@ const styles = StyleSheet.create({
     marginLeft: 50
   },
 });
-
-
-/*      <ScrollView contentContainerStyle = {styles.scrollview}>
-      <View style={styles.bottomSection}>
-        <View>  
-          <Image
-          source = {require("../../assets/images/bike.png")} 
-          style={styles.bike}
-          /> 
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/guitar.png")} 
-          style={styles.guitar}
-          /> 
-        </View>
-      </View>
-      </ScrollView>
-    </SafeAreaView>
-
-    <ScrollView>
-        <View style={styles.bottomSection}>
-          <Image source={ require('../../assets/images/bike.png')} style={styles.image} />
-          <Text style={styles.itemTitle}> Bike </Text>
-          <Text style={styles.price}> $20 </Text>
-          <Text style={styles.username}> @yy134</Text>    
-        </View>
-      </ScrollView>
-*/
-  bike: {
-    resizeMode: "contain",
-    height: 150,
-    width: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 50
-  },
-  guitar: {
-    resizeMode: "contain",
-    height: 150,
-    width: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 40,
-  },
-});
-
-
-/*      <ScrollView contentContainerStyle = {styles.scrollview}>
-      <View style={styles.bottomSection}>
-        <View>  
-          <Image
-          source = {require("../../assets/images/bike.png")} 
-          style={styles.bike}
-          /> 
-        </View>
-
-        <View>  
-          <Image
-          source = {require("../../assets/images/guitar.png")} 
-          style={styles.guitar}
-          /> 
-        </View>
-      </View>
-      </ScrollView>
-    </SafeAreaView>
-
-    <ScrollView>
-        <View style={styles.bottomSection}>
-          <Image source={ require('../../assets/images/bike.png')} style={styles.image} />
-          <Text style={styles.itemTitle}> Bike </Text>
-          <Text style={styles.price}> $20 </Text>
-          <Text style={styles.username}> @yy134</Text>    
-        </View>
-      </ScrollView>
-*/
