@@ -1,6 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
+  Dimensions,
   Image,
   SafeAreaView,
   ScrollView,
@@ -9,7 +10,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useColorScheme
+  useColorScheme,
+  FlatList,
 } from "react-native";
 
 export default function ListingsScreen() {
@@ -21,27 +23,51 @@ export default function ListingsScreen() {
     {
       id: "bike",
       title: "Bike",
+      price: 20,
+      username: 'yy143',
       image: require("../../assets/images/bike.png"),
     },
     {
       id: "guitar",
       title: "Guitar",
+      price: 100,
+      username: 'changmalichang',
       image: require("../../assets/images/guitar.png"),
     },
     {
       id: "shoe",
       title: "Shoe",
+      price: 23504,
+      username: 'kanyebitchass',
       image: require("../../assets/images/shoe.png"),
     },
   ];
-  const renderIteming = ({item}: { item: any}) => (
-    <View style={styles.itemCard}>
+
+  type Props = {
+    items: items[];
+  }
+  const ItemGrid: React.FC<Props> = ({items}) => {
+    const renderItem = ({item}: {item: items}) => (
+      <View style={styles.itemCard}>
       <Image source={item.image} style= {styles.image} />,
       <Text> style={styles.itemTitle}{item.title}</Text>
-      <Text> style={[styles.price, textTheme]}${item.price}</Text>
+      <Text> style={[styles.itemPrice, textTheme]}${item.price}</Text>
       <Text style={[styles.username, textTheme]}>@{item.username}</Text>
     </View>
-  )
+    );
+
+    return (
+      <FlatList
+        data={stuff}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        contentContainerStyle=(styles.listContainer)
+      />
+    );
+  };
+ 
+  
 
   return (
     <SafeAreaView style={[styles.safe, themeStyle]}>
@@ -66,29 +92,13 @@ export default function ListingsScreen() {
           </TouchableOpacity>
         </View>
       </View>
-      
-     <ScrollView contentContainerStyle = {styles.scrollview}>
-      <View style={styles.bottomSection}>
-        <View>  
-          <Image
-          source = {require("../../assets/images/bike.png")} 
-          style={styles.bike}
-          /> 
-        </View>
 
-        <View>  
-          <Image
-          source = {require("../../assets/images/guitar.png")} 
-          style={styles.guitar}
-          /> 
-        </View>
-      </View>
-      </ScrollView>
-    </SafeAreaView>
-
-
+</SafeAreaView>
   );
 }
+
+const screenWidth = Dimensions.get('window' as 'window').width;
+const itemWidth = (screenWidth - 32) / 2;
 
 const styles = StyleSheet.create({
   safe: {
@@ -113,10 +123,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    padding: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 16
   },
   itemCard:{
+    width: itemWidth,
+    margin: 8,
+    backgroundColor: '#fff',
+    borderRadius: 8,
     alignItems: 'center',
+    elevation: 2,
   },
   itemTitle: {
     fontWeight: 'bold',
@@ -124,7 +140,7 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingTop: 2,
   },
-  price: {
+  itemPrice: {
     fontSize:16,
     color: '#28a745',
     fontWeight: 600,
@@ -181,26 +197,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "blue",
   },
-  card: { marginBottom: 24, alignItems: "center" },
-  image: { width: 150, height: 150 },
-  label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
-  bike: {
-    resizeMode: "contain",
-    height: 150,
-    width: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 50
+  image: {
+    width: '100%',
+    height: 120,
+    borderRadius: 8,
   },
-  guitar: {
-    resizeMode: "contain",
-    height: 150,
-    width: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 40,
-  },
-});
+  });
 
 
 /*      <ScrollView contentContainerStyle = {styles.scrollview}>
