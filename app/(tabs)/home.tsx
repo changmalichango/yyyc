@@ -19,33 +19,25 @@ export default function ListingsScreen() {
   const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeStyle =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  const items = [
-    {
-      id: "bike",
+  type Stuff = [
+    id: string,
+    title: string,
+    price: number,
+    username: string,
+    image: any,
+  ];
+
+
+const items: Stuff[] = [
+  {
+      id: 'bike'
       title: "Bike",
       price: 20,
       username: 'yy143',
       image: require("../../assets/images/bike.png"),
-    },
-    {
-      id: "guitar",
-      title: "Guitar",
-      price: 100,
-      username: 'changmalichang',
-      image: require("../../assets/images/guitar.png"),
-    },
-    {
-      id: "shoe",
-      title: "Shoe",
-      price: 23504,
-      username: 'kanyebitchass',
-      image: require("../../assets/images/shoe.png"),
-    },
-  ];
-
-  type Props = {
-    items: items[];
   }
+]
+
   const ItemGrid: React.FC<Props> = ({items}) => {
     const renderItem = ({item}: {item: items}) => (
       <View style={styles.itemCard}>
@@ -56,15 +48,7 @@ export default function ListingsScreen() {
     </View>
     );
 
-    return (
-      <FlatList
-        data={stuff}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle=(styles.listContainer)
-      />
-    );
+    
   };
  
   
