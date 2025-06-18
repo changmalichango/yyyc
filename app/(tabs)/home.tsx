@@ -48,7 +48,7 @@ export default function ListingsScreen() {
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
       <View style ={styles.topSection}>
-        <View style={styles.title}>
+        <View style={styles.logoTitle}>
           <Image
             source={require("../../assets/images/logo.png")}
             style={styles.logo}
@@ -158,17 +158,9 @@ const styles = StyleSheet.create({
   bottomSection: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    padding: 12,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 12,
     rowGap: 24,
-  },
-  leftHalf: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: 'center',
-  },
-  rightHalf: {
-    flex: 1,
   },
   listContainer: {
     padding: 10,
@@ -200,7 +192,7 @@ const styles = StyleSheet.create({
   darkColor: { backgroundColor: "black" },
   textDark: { color: "black" },
   textLight: { color: "white" },
-  title: {
+  logoTitle: {
     height: 40,
     flexDirection: "row",
   },
