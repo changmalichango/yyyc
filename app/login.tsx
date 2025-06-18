@@ -25,7 +25,32 @@ export default function LoginScreen() {
       Alert.alert(error.message);
     } else {
       Alert.alert("Success", "Logged in!");
-      router.replace("/me");
+      // if (data.session) {
+      //   console.log("authenticated");
+      // }
+
+      const myUid = data.user.id;
+
+      const { data: currentUsername, error } = await supabase
+        .from("users")
+        .select("name")
+        .eq("uid", myUid)
+        .maybeSingle();
+
+      if (error) {
+        Alert.alert(error.message);
+      }
+
+      // console.log(myUid);
+      // console.log(currentUsername);
+      console.log(currentUsername?.name);
+      console.log(!currentUsername?.name);
+
+      if (!currentUsername?.name) {
+        router.replace("/firstimeUser");
+      } else {
+        router.replace("/me");
+      }
     }
   };
 
