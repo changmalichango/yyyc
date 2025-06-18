@@ -67,7 +67,7 @@ export default function ListingsScreen() {
         </View>
       </View>
       
-     <ScrollView contentContainerStyle = {[styles.scrollview, {paddingBottom: 100}]}>
+     <ScrollView contentContainerStyle = {[styles.scrollView, {paddingBottom: 100}]}>
       <View style={styles.bottomSection}>
         <View style= {{width: '48%', marginBottom: 16 }}>  
           <Image
