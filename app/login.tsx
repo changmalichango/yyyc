@@ -10,13 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { getUid } from "@/assets/functions";
+
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data: data1, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -29,7 +32,7 @@ export default function LoginScreen() {
       //   console.log("authenticated");
       // }
 
-      const myUid = data.user.id;
+      const myUid = await getUid();
 
       const { data: currentUsername, error } = await supabase
         .from("users")
@@ -41,10 +44,10 @@ export default function LoginScreen() {
         Alert.alert(error.message);
       }
 
-      // console.log(myUid);
+      // console.log(typeof myUid);
       // console.log(currentUsername);
-      console.log(currentUsername?.name);
-      console.log(!currentUsername?.name);
+      // console.log(currentUsername?.name);
+      // console.log(!currentUsername?.name);
 
       if (!currentUsername?.name) {
         router.replace("/firstimeUser");

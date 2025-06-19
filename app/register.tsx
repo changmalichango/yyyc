@@ -37,17 +37,6 @@ export default function RegisterScreen() {
         <Text style={styles.title}>Register</Text>
       </View>
 
-      {/* name, add in later  */}
-      {/* <View>
-        <Text>Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-          placeholderTextColor={"black"}
-        />
-      </View> */}
       <View>
         <Text style={styles.subtext}>Email</Text>
         <TextInput
