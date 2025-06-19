@@ -26,30 +26,28 @@ export default function ListingsScreen() {
   }
 
   const Card: React.FC<Props> = ({title, price, username, image}) => (
-    <View style={styles.card}> 
+    <View style={styles.itemCard}> 
       <Image source={image} style={styles.image} />
-      <View style={styles.titleRow}>
+      <View>
         <Text style={styles.itemTitle}>{title}</Text>
-        <View>
-          <Text style={styles.price}>${price}</Text>  
-        </View>
-      </View>    
-      <Text style={styles.username}>@{username}</Text>
+        <Text style={styles.price}>${price}</Text>  
+        <Text style={styles.username}>@{username}</Text>
+      </View>
     </View>
   )
 
   return (
-    <SafeAreaView style={[styles.safe, themeStyle]}>
+    <SafeAreaView style={[styles.safe, themeStyle,]}>
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
-      <View style={styles.topSection}>
+      <View style ={styles.topSection}>
         <View style={styles.logoTitle}>
           <Image
             source={require("../../assets/images/logo.png")}
             style={styles.logo}
           />
-        </View>  
           <Text style={styles.logoText}>CanIRent</Text>
+        </View>  
         
 
         {/* ///////////////////////////////////// */}
@@ -65,42 +63,56 @@ export default function ListingsScreen() {
         {/* ///////////////////////////////////// */}
 
     <ScrollView contentContainerStyle={styles.scrollView}>
-      <View style={[styles.bottomSection, styles.imageContainer]}>
+      <View style={[styles.bottomSection, {paddingBottom: 50}]}>
         <Card
-          title= "bike"
+          title= "Bike"
           price= {30}
           username= "yy143"
-          image={require('../../assets/images/eiffertower.png')}
+          image={require('../../assets/images/bike.png')}
         />  
-      </View>
-      <View style={[styles.bottomSection, styles.imageContainer]}>
         <Card
-          title= "guitar"
+          title= "Effiel tower"
           price= {30}
           username= "yc"
-          image={require('../../assets/images/guitar.png')}
+          image={require('../../assets/images/eiffertower.png')}
         />  
-      </View>
-      <View style={[styles.bottomSection, styles.imageContainer]}>
         <Card
-          title= "bike"
+          title= "Effiel tower"
           price= {30}
-          username= "tzefoong"
+          username= "yc"
           image={require('../../assets/images/sky.png')}
+        />  
+        <Card
+          title= "Effiel tower"
+          price= {30}
+          username= "yc"
+          image={require('../../assets/images/sky.png')}
+        />
+        <Card
+          title= "Effiel tower"
+          price= {30}
+          username= "yc"
+          image={require('../../assets/images/sky.png')}
+        />
+        <Card
+          title= "Bike"
+          price= {30}
+          username= "yy143"
+          image={require('../../assets/images/shoe.png')}
+        />  
+        <Card
+          title= "slave"
+          price= {30}
+          username= "yy143"
+          image={require('../../assets/images/guitar.png')}
         />  
       </View>
     </ScrollView>
   </SafeAreaView>
   )
-}
-
-
-const styles = StyleSheet.create({
+}const styles = StyleSheet.create({
   safe: {
     flex: 1,
-  },
-  scrollView: {
-    padding: 20,
   },
   topSection: {
     padding: 20,
@@ -108,65 +120,13 @@ const styles = StyleSheet.create({
   bottomSection: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingHorizontal: 12,
     rowGap: 24,
-  },
-  listContainer: {
-    padding: 10,
-  },
-  itemCard:{
-    width: '46%',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 32,
-    marginRight: 10,
-    elevation: 2,
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  itemTitle: {
-    fontWeight: 'bold',
-    fontSize: 25,
-    color: 'black',
-    paddingTop: 2,
-    marginLeft: 10
-  },
-  price: {
-    fontSize:20,
-    color: '#28a745',
-    fontWeight: 600,
-    marginLeft: 60,
-    marginTop: 7
-  },
-  username:{
-    fontSize: 15,
-    color: '#888',
-    marginLeft:0,
-  },
-  scrollview: {
-    padding: 20,
-  },
-  imageContainer: {
-  width: 225,
-  height: 225,
-  marginBottom: 40,
-  borderColor: '#28a745',
-  
-  justifyContent: 'center',
-  alignItems: 'center',
-  
-  },
-  leftHalf: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: 'center',
-  },
-  rightHalf: {
-    flex: 1,
   },
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
@@ -216,7 +176,43 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "blue",
   },
-  card: { marginBottom: 24, alignItems: "center" },
-  image: { width: '100%', height: '100%', marginBottom: 6, resizeMode: 'contain'},
+  image: { width: '100%', height: 200, marginRight: 19, borderRadius: 8, resizeMode: 'contain'},
+  scrollView: {
+    padding: 0,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    resizeMode: 'contain',
+  },
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
+  itemCard:{
+    width: '48%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding:10,
+    elevation: 2,
+    marginLeft: 5,
+    marginBottom: 0,
+  },
+  itemTitle: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: 'black',
+    paddingTop: 2,
+    marginLeft: 11.9
+  },
+  price: {
+    fontSize:20,
+    color: '#28a745',
+    fontWeight: 600,
+    marginLeft: 11.9,
+  },
+  username:{
+    fontSize: 15,
+    color: '#888',
+    marginLeft: 11.9,
+  },
+  details: {
+    paddingBottom: 60,
+  }
 });
