@@ -9,13 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useColorScheme,
+  useColorScheme
 } from "react-native";
 
 export default function ListingsScreen() {
   const colorScheme = useColorScheme();
-  const textTheme = colorScheme === "dark" ? styles.textLight : styles.textDark;
-  const themeStyle =
+  const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
+  const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   
   type Props = {
@@ -26,10 +26,10 @@ export default function ListingsScreen() {
   }
 
   const Card: React.FC<Props> = ({title, price, username, image}) => (
-    <View style={styles.itemCard}> 
+    <View style={[styles.itemCard, themeColor]}> 
       <Image source={image} style={styles.image} />
       <View>
-        <Text style={styles.itemTitle}>{title}</Text>
+        <Text style={[styles.itemTitle, textColor]}>{title}</Text>
         <Text style={styles.price}>${price}</Text>  
         <Text style={styles.username}>@{username}</Text>
       </View>
@@ -37,7 +37,7 @@ export default function ListingsScreen() {
   )
 
   return (
-    <SafeAreaView style={[styles.safe, themeStyle,]}>
+    <SafeAreaView style={[styles.safe, themeColor]}>
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
       <View style ={styles.topSection}>
@@ -110,7 +110,9 @@ export default function ListingsScreen() {
     </ScrollView>
   </SafeAreaView>
   )
-}const styles = StyleSheet.create({
+}
+
+const styles = StyleSheet.create({
   safe: {
     flex: 1,
   },
