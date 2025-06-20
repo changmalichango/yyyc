@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 
-import { getUid } from "@/assets/functions";
+import { getName } from "@/assets/functions";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -28,28 +28,14 @@ export default function LoginScreen() {
       Alert.alert(error.message);
     } else {
       Alert.alert("Success", "Logged in!");
-      // if (data.session) {
-      //   console.log("authenticated");
-      // }
-
-      const myUid = await getUid();
-
-      const { data: currentUsername, error } = await supabase
-        .from("users")
-        .select("name")
-        .eq("uid", myUid)
-        .maybeSingle();
-
-      if (error) {
-        Alert.alert(error.message);
-      }
-
-      // console.log(typeof myUid);
-      // console.log(currentUsername);
-      // console.log(currentUsername?.name);
-      // console.log(!currentUsername?.name);
-
-      if (!currentUsername?.name) {
+     
+     
+      // CHECKING IF USER HAVE USERNAME
+      // ////////////////////////////////////////////////
+      
+      const username = await getName();
+      console.log(username);
+      if (!username) {
         router.replace("/firstimeUser");
       } else {
         router.replace("/me");

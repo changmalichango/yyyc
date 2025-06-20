@@ -1,8 +1,8 @@
-import { database } from "@/authen/firebaseConfig";
+import { getEmail, getName } from "@/assets/functions";
+import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -13,40 +13,32 @@ import {
   View,
 } from "react-native";
 
-import { Feather } from "@expo/vector-icons";
-import { auth } from "../../authen/firebaseConfig";
-
 export default function MeScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const styleColor =
     colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
   const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
-  const collectionRef = collection(database, "users");
 
-  const getData = () => {
-    getDocs(collectionRef).then((response) => {
-      console.log(
-        response.docs.map((item) => {
-          return { ...item.data() };
-        })
-      );
-    });
-  };
+  const [username, setUsername] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const name = await getName();
+      setUsername(name);
+    };
 
-  const updateData = () => {
-    const docToUpdate = doc(database, "users", "loTIjMbZ1BgU7hR05UfE");
-    updateDoc(docToUpdate, {
-      email: "yyyyy",
-      password: "aaaaa",
-    });
-  };
+    fetchUsername();
+  }, []);
 
-  const myUid = () => {
-    const user = auth.currentUser;
-    const uid = user?.uid;
-    console.log(uid);
-  };
+  const [email, setEmail] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const email = await getEmail();
+      setEmail(email);
+    };
+    fetchEmail();
+  }, []);
+
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
       {/* TITLE BOX
@@ -95,10 +87,10 @@ USER NAME AND EMAIL */}
 
       <View style={{ alignItems: "center", marginTop: 10 }}>
         <Text style={[{ fontWeight: "bold", fontSize: 25 }, textColor]}>
-          yy
+          {username || "Loading.."}
         </Text>
         <Text style={{ marginTop: 5, color: "grey", fontSize: 20 }}>
-          yy@email.com
+          {email || "Loading.."}
         </Text>
         <Text></Text>
       </View>
@@ -107,7 +99,7 @@ USER NAME AND EMAIL */}
       EDIT PROFILE */}
 
       <View style={{ marginTop: 40 }}>
-        <TouchableOpacity onPress={myUid}>
+        <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="edit" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Edit Profile</Text>
@@ -154,7 +146,7 @@ USER NAME AND EMAIL */}
 
         {/* LOG OUT
         ///////////////////////////////////////////////////////////// */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.replace("/test")}>
           <View style={styles.functionBox}>
             <Feather name="log-out" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Log Out</Text>

@@ -1,7 +1,9 @@
-import React from "react";
+import * as ImagePicker from "expo-image-picker";
+import React, { useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -17,6 +19,24 @@ export default function ListScreen() {
   const styleColor =
     colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
   const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
+
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
       {/* TITLE
@@ -103,6 +123,7 @@ export default function ListScreen() {
 
         {/* IMAGE BOX
         ////////////////////////////////////////////////////////////////////////// */}
+
         <View>
           <View style={{ flexDirection: "row" }}>
             <Text style={[textColor, styles.textOnBox]}>Image</Text>
@@ -112,8 +133,11 @@ export default function ListScreen() {
           </View>
 
           {/* <View style={[styles.imageBox]}></View> */}
-          <TouchableOpacity style={styles.imageBox}>
-            <Ionicons name="add" size={40} color={"grey"} />
+          <TouchableOpacity style={styles.imageBox} onPress={pickImage}>
+            {image && <Image source={{ uri: image }} style={styles.image} />}
+            <View style={styles.icon}>
+              <Ionicons name="add" size={40} color={"grey"} />
+            </View>
           </TouchableOpacity>
           {/* 
           <TouchableOpacity style={styles.box1}>
@@ -185,9 +209,19 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   imageBox: {
-    color: "grey",
+    // color: "grey",
     height: 50,
-
+    flexDirection: "row",
+    width: 50,
+    // borderWidth: 2,
+    borderRadius: 4,
+    borderColor: "grey",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  icon: {
+    height: 50,
+    flexDirection: "row",
     width: 50,
     borderWidth: 2,
     borderRadius: 4,
@@ -195,6 +229,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderStyle: "dashed",
+  },
+  image: {
+    width: 50,
+    height: 50,
   },
   uploadBox: {
     marginTop: 15,

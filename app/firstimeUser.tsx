@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 
-export default function ChatScreen() {
+export default function FisrtTimeScreen() {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const storeData = async () => {
