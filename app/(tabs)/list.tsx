@@ -1,8 +1,16 @@
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 
+import {
+  DropdownCondition,
+  DropdownDuration,
+  getName,
+  getUid,
+} from "@/assets/functions";
+import { supabase } from "@/authen/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -20,6 +28,13 @@ export default function ListScreen() {
     colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
   const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
 
+  const [item, setItem] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState("");
+  const [price, setPrice] = useState("");
+  const [duration, setDuration] = useState("");
+  const [description, setdescription] = useState("");
+  const [address, setAddress] = useState("");
+
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
@@ -31,9 +46,27 @@ export default function ListScreen() {
     });
 
     console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  };
+  const storeDataUploads = async () => {
+    const myUid = await getUid();
+    const name = await getName();
+    const { data, error } = await supabase.from("uploads").insert({
+      uid: myUid,
+      name: name,
+      item: item,
+      duration: duration,
+      condition: selectedCondition,
+      price: price,
+      description: description,
+      address: address,
+    });
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      Alert.alert("Upload Successfully!");
     }
   };
 
@@ -55,6 +88,8 @@ export default function ListScreen() {
             <TextInput
               placeholder="Enter the name of your item"
               style={{ paddingLeft: 5, fontSize: 15 }}
+              value={item}
+              onChangeText={setItem}
             />
           </View>
         </View>
@@ -64,8 +99,10 @@ export default function ListScreen() {
         <View>
           <Text style={[textColor, styles.textOnBox]}>Conditions</Text>
 
-          <View style={[styles.box2]}>
-            <TextInput placeholder="$" />
+          <View style={[styles.dropbox]}>
+            <DropdownCondition
+              onValueChange={(val) => setSelectedCondition(val)}
+            />
           </View>
           <View style={{ justifyContent: "center", marginRight: 43 }}>
             {/* <Text
@@ -86,7 +123,11 @@ export default function ListScreen() {
           <Text style={[textColor, styles.textOnBox]}>Price</Text>
           <View style={{ flexDirection: "row" }}>
             <View style={[styles.box2]}>
-              <TextInput placeholder="$" />
+              <TextInput
+                placeholder="$"
+                value={price}
+                onChangeText={setPrice}
+              />
             </View>
             <View style={{ justifyContent: "center", marginRight: 43 }}>
               <Text
@@ -98,8 +139,10 @@ export default function ListScreen() {
                 $
               </Text>
             </View>
-            <View style={[styles.box2]}>
-              <Text style={textColor}>per month</Text>
+            <View style={[styles.dropbox]}>
+              {/* <Text style={textColor}>per month</Text> */}
+
+              <DropdownDuration onValueChange={(val) => setDuration(val)} />
             </View>
           </View>
         </View>
@@ -117,6 +160,8 @@ export default function ListScreen() {
                 fontSize: 15,
                 paddingTop: 5,
               }}
+              value={description}
+              onChangeText={setdescription}
             />
           </View>
         </View>
@@ -139,10 +184,6 @@ export default function ListScreen() {
               <Ionicons name="add" size={40} color={"grey"} />
             </View>
           </TouchableOpacity>
-          {/* 
-          <TouchableOpacity style={styles.box1}>
-            <Text>Upload Image</Text>
-          </TouchableOpacity> */}
         </View>
 
         {/* ADDRESS
@@ -153,12 +194,14 @@ export default function ListScreen() {
             <TextInput
               placeholder="Enter your address"
               style={{ paddingLeft: 5, fontSize: 15 }}
+              value={address}
+              onChangeText={setAddress}
             />
           </View>
         </View>
 
         <View>
-          <TouchableOpacity style={styles.uploadBox}>
+          <TouchableOpacity style={styles.uploadBox} onPress={storeDataUploads}>
             <Text style={{ fontWeight: "bold", color: "white" }}>UPLOAD</Text>
           </TouchableOpacity>
         </View>
@@ -195,6 +238,14 @@ const styles = StyleSheet.create({
     height: 50,
     width: "40%",
     borderWidth: 1,
+    borderRadius: 4,
+    borderColor: "grey",
+    justifyContent: "center",
+  },
+  dropbox: {
+    height: 50,
+    width: "40%",
+    // borderWidth: 1,
     borderRadius: 4,
     borderColor: "grey",
     justifyContent: "center",

@@ -1,41 +1,27 @@
-import * as ImagePicker from "expo-image-picker";
+import { DropdownCondition, DropdownDuration } from "@/assets/functions";
 import React, { useState } from "react";
-import { Button, Image, StyleSheet, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
-export default function ImagePickerExample() {
-  const [image, setImage] = useState<string | null>(null);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+export default function TestScreen() {
+  const [selectedCondition, setSelectedCondition] = useState("");
+  const [date, setDate] = useState("");
 
   return (
-    <View style={styles.container}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+    <View>
+      <View>
+        <DropdownCondition onValueChange={(val) => setSelectedCondition(val)} />
+
+        <TouchableOpacity onPress={() => console.log(selectedCondition)}>
+          <Text>ahfaudhaouf</Text>
+        </TouchableOpacity>
+      </View>
+      <View>
+        <DropdownDuration onValueChange={(val) => setDate(val)} />
+
+        <TouchableOpacity onPress={() => console.log(date)}>
+          <Text>ahfaudhaouf</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: 200,
-    height: 200,
-  },
-});
