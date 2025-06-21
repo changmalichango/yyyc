@@ -1,8 +1,8 @@
 import React from "react";
 import {
+  FlatList,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -20,87 +20,44 @@ export default function ChatScreen() {
     type Props = {
       username: string;
       image: any;
-      borderColor: string;
     };
     
       const ChatBox: React.FC<Props> = ({username, image}) => (
-      <View style={[styles.chatRectangle, themeColor]}>
-        <Image source={image} style={styles.circlePfp} />
-        <View>
-          <Text style={[styles.chatUsername, textColor]}>
-            {username}
-          </Text>
-        </View>  
-      </View>
-      )
+          <View style={[styles.chatRectangle, themeColor]}> 
+            <Image source={image} style={styles.circlePfp} />
+            <View>
+              <Text style={styles.chatUsername}>@{username}</Text>
+            </View>
+          </View>
+        )
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       <View style= {styles.topSection}>
         <Text style={[styles.chatsText, textColor]}>Chats</Text>
-        borderColor={colorScheme === "dark" ? "white" : "black" }
       </View>
 
       {/* Chat list would go here */}
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.bottomSection}>
-          <ChatBox
-            image={require("../../assets/images/eiffertower.png")}
-            username="yy"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-        <ChatBox
-            image={require("../../assets/images/reiner.png")}
-            username="yc"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-        <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/guitar.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/bike.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/beatrice.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/tabitha.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/reiner.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/beatrice.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-        </View>
-      </ScrollView>
+      <FlatList
+        contentContainerStyle={[styles.container, {paddingBottom: 200}, styles.bottomSection]}
+          data={[
+            { username: "yc", image: require("../../assets/images/beatrice.png") },
+            { username: "y1", image: require("../../assets/images/indian.png") },
+            { username: "y4", image: require("../../assets/images/reiner.png") },
+            { username: "yt", image: require("../../assets/images/bike.png") },
+                
+              ]}
+              renderItem={({ item }) => (
+                <ChatBox
+                  username={item.username}
+                  image={item.image}
+                />
+              )}
+              keyExtractor={(item) => item.username}
+              numColumns={1}
+              showsVerticalScrollIndicator={false}
+              style={[styles.details]}
+            />
     </SafeAreaView>)
 }
 
@@ -129,7 +86,9 @@ const styles = StyleSheet.create({
   textLight: {
     color: "white"
   },
-
+details: {
+    paddingBottom: 100,
+  },
   topSection: {
     flexDirection: "row",
     alignItems: "center",
@@ -159,7 +118,9 @@ const styles = StyleSheet.create({
   borderBottomWidth: 0,
   alignItems: 'center',
   width: '100%',
+  height: 20,
   padding: 3,
+  marginRight: 300,
 },
 
 circlePfp: {
@@ -179,4 +140,9 @@ chatUsername: {
   alignSelf: 'flex-start',
   marginBottom: 45
 },
+container: {
+    padding: 16,
+    paddingBottom: 60,
+    alignItems: "center",
+  },
 });
