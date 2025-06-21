@@ -1,9 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import {
+  FlatList,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -62,52 +62,30 @@ export default function ListingsScreen() {
       </View>  
         {/* ///////////////////////////////////// */}
 
-    <ScrollView contentContainerStyle={styles.scrollView}>
-      <View style={[styles.bottomSection, {paddingBottom: 50}]}>
-        <Card
-          title= "Bike"
-          price= {30}
-          username= "yy143"
-          image={require('../../assets/images/bike.png')}
-        />  
-        <Card
-          title= "Effiel tower"
-          price= {30}
-          username= "yc"
-          image={require('../../assets/images/eiffertower.png')}
-        />  
-        <Card
-          title= "Effiel tower"
-          price= {30}
-          username= "yc"
-          image={require('../../assets/images/sky.png')}
-        />  
-        <Card
-          title= "Effiel tower"
-          price= {30}
-          username= "yc"
-          image={require('../../assets/images/sky.png')}
-        />
-        <Card
-          title= "Effiel tower"
-          price= {30}
-          username= "yc"
-          image={require('../../assets/images/sky.png')}
-        />
-        <Card
-          title= "Bike"
-          price= {30}
-          username= "yy143"
-          image={require('../../assets/images/shoe.png')}
-        />  
-        <Card
-          title= "slave"
-          price= {30}
-          username= "yy143"
-          image={require('../../assets/images/guitar.png')}
-        />  
-      </View>
-    </ScrollView>
+      <FlatList
+        contentContainerStyle={[styles.container, {paddingBottom: 200}]}
+        data={[
+          { title: "Eiffel Tower", price: 100, username: "yy", image: require("../../assets/images/eiffertower.png") },
+          { title: "Reiner", price: 200, username: "yc", image: require("../../assets/images/reiner.png") },
+          { title: "Sky", price: 300, username: "tzefoong", image: require("../../assets/images/sky.png") },
+          { title: "Mountains", price: 400, username: "john_doe", image: require("../../assets/images/guitar.png") },
+          { title: "Beach House", price: 500, username: "jane_doe", image: require("../../assets/images/eiffertower.png") },
+          { title: "Guitar", price: 20, username: "jiawen", image: require("../../assets/images/indian.png")},
+        ]}
+        renderItem={({ item }) => (
+          <Card
+            title={item.title}
+            price={item.price}
+            username={item.username}
+            image={item.image}
+          />
+        )}
+        keyExtractor={(item) => item.title}
+        numColumns={2}
+        columnWrapperStyle={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        style={[styles.details]}
+      />
   </SafeAreaView>
   )
 }
@@ -174,13 +152,12 @@ const styles = StyleSheet.create({
   btnText: { color: "white", fontSize: 20, fontWeight: "600" },
   container: {
     padding: 16,
-    height: "95%",
+    paddingBottom: 60,
     alignItems: "center",
-    // backgroundColor: "blue",
   },
   image: { width: '100%', height: 200, marginRight: 19, borderRadius: 8, resizeMode: 'contain'},
   scrollView: {
-    padding: 0,
+    paddingBottom: 0,
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -215,6 +192,6 @@ const styles = StyleSheet.create({
     marginLeft: 11.9,
   },
   details: {
-    paddingBottom: 60,
+    paddingBottom: 100,
   }
 });

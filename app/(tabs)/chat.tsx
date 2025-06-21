@@ -1,14 +1,13 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import {
+  FlatList,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  useColorScheme,
+  useColorScheme
 } from "react-native";
 
 
@@ -26,17 +25,14 @@ export default function ChatScreen() {
     };
     
       const ChatBox: React.FC<Props> = ({username, image}) => (
-      <TouchableOpacity onPress={() => router.push("/chat/chatscreen")}>
-        <View style={[styles.chatRectangle, themeColor]}>
-          <Image source={image} style={styles.circlePfp} />
+          <View style={[styles.chatRectangle, themeColor]}> 
+            <Image source={image} style={styles.circlePfp} />
             <View>
-              <Text style={[styles.chatUsername, textColor]}>
-                {username}
-              </Text>
-            </View>  
+              <Text style={styles.chatUsername}>@{username}</Text>
+            </View>
           </View>
-      </TouchableOpacity>  
-      )
+        )
+
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
@@ -45,30 +41,28 @@ export default function ChatScreen() {
       </View>
 
       {/* Chat list would go here */}
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.bottomSection}>
-          <ChatBox
-            image={require("../../assets/images/eiffertower.png")}
-            username="yy"
-          />
-        <ChatBox
-            image={require("../../assets/images/reiner.png")}
-            username="yc"
-          />
-        <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="brenon the planner"
-          />
-          <ChatBox
-            image={require("../../assets/images/guitar.png")}
-            username="behrouz"
-          />
-          <ChatBox
-            image={require("../../assets/images/bike.png")}
-            username="tzefoong"
-          />
-        </View>
-      </ScrollView>
+
+      <FlatList
+        contentContainerStyle={[styles.container, {paddingBottom: 200}, styles.bottomSection]}
+          data={[
+            { username: "yc", image: require("../../assets/images/beatrice.png") },
+            { username: "y1", image: require("../../assets/images/indian.png") },
+            { username: "y4", image: require("../../assets/images/reiner.png") },
+            { username: "yt", image: require("../../assets/images/bike.png") },
+                
+              ]}
+              renderItem={({ item }) => (
+                <ChatBox
+                  username={item.username}
+                  image={item.image}
+                />
+              )}
+              keyExtractor={(item) => item.username}
+              numColumns={1}
+              showsVerticalScrollIndicator={false}
+              style={[styles.details]}
+      />
+
     </SafeAreaView>)
 }
 
@@ -97,7 +91,9 @@ const styles = StyleSheet.create({
   textLight: {
     color: "white"
   },
-
+details: {
+    paddingBottom: 100,
+  },
   topSection: {
     flexDirection: "row",
     alignItems: "center",
@@ -127,7 +123,9 @@ const styles = StyleSheet.create({
   borderBottomWidth: 0,
   alignItems: 'center',
   width: '100%',
+  height: 20,
   padding: 3,
+  marginRight: 300,
 },
 
 circlePfp: {
@@ -147,4 +145,9 @@ chatUsername: {
   alignSelf: 'flex-start',
   marginBottom: 25
 },
+container: {
+    padding: 16,
+    paddingBottom: 60,
+    alignItems: "center",
+  },
 });
