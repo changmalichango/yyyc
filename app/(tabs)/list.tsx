@@ -9,6 +9,7 @@ import {
 } from "@/assets/functions";
 import { supabase } from "@/authen/supabase";
 import { Ionicons } from "@expo/vector-icons";
+import { decode } from "base64-arraybuffer";
 import {
   Alert,
   Image,
@@ -36,20 +37,44 @@ export default function ListScreen() {
   const [address, setAddress] = useState("");
 
   const [image, setImage] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
       allowsEditing: true,
       aspect: [4, 3],
+      base64: true,
       quality: 1,
     });
 
     console.log(result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      const base64 = result.assets[0].base64;
+      const fileName = `${Date.now()}.jpg`;
+
+      const { error } = await supabase.storage
+        .from("listing-images")
+        .upload(fileName, decode(base64!), {
+          contentType: "image/jpeg",
+          upsert: true,
+        });
+      if (error) {
+        Alert.alert("its here");
+      } else {
+        Alert.alert("Upload Sucessful");
+      }
+
+      const { data } = supabase.storage
+        .from("listing-images")
+        .getPublicUrl(fileName);
+
+      setImageUrl(data?.publicUrl);
+      console.log(data?.publicUrl);
     }
   };
+
   const storeDataUploads = async () => {
     const myUid = await getUid();
     const name = await getName();
@@ -62,6 +87,7 @@ export default function ListScreen() {
       price: price,
       description: description,
       address: address,
+      image_url: imageUrl,
     });
     if (error) {
       Alert.alert(error.message);
