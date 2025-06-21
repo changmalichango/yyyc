@@ -38,7 +38,7 @@ export default function LoginScreen() {
       if (!username) {
         router.replace("/firstimeUser");
       } else {
-        router.replace("/me");
+        router.replace("/home");
       }
     }
   };
@@ -78,7 +78,7 @@ export default function LoginScreen() {
         </View>
 
         <View>
-          <TouchableOpacity onPress={() => router.replace("/me")}>
+          <TouchableOpacity onPress={() => router.replace("/home")}>
             <Text style={styles.forget}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>

@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   Image,
@@ -5,8 +6,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
 
 
@@ -16,29 +18,30 @@ export default function ChatScreen() {
     const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
     const themeColor =
       colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-
+    const router = useRouter();
+    
     type Props = {
       username: string;
       image: any;
-      borderColor: string;
     };
     
       const ChatBox: React.FC<Props> = ({username, image}) => (
-      <View style={[styles.chatRectangle, themeColor]}>
-        <Image source={image} style={styles.circlePfp} />
-        <View>
-          <Text style={[styles.chatUsername, textColor]}>
-            {username}
-          </Text>
-        </View>  
-      </View>
+      <TouchableOpacity onPress={() => router.push("/chat/chatscreen")}>
+        <View style={[styles.chatRectangle, themeColor]}>
+          <Image source={image} style={styles.circlePfp} />
+            <View>
+              <Text style={[styles.chatUsername, textColor]}>
+                {username}
+              </Text>
+            </View>  
+          </View>
+      </TouchableOpacity>  
       )
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       <View style= {styles.topSection}>
         <Text style={[styles.chatsText, textColor]}>Chats</Text>
-        borderColor={colorScheme === "dark" ? "white" : "black" }
       </View>
 
       {/* Chat list would go here */}
@@ -47,57 +50,22 @@ export default function ChatScreen() {
           <ChatBox
             image={require("../../assets/images/eiffertower.png")}
             username="yy"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
           />
         <ChatBox
             image={require("../../assets/images/reiner.png")}
             username="yc"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
           />
         <ChatBox
             image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
+            username="brenon the planner"
           />
           <ChatBox
             image={require("../../assets/images/guitar.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
+            username="behrouz"
           />
           <ChatBox
             image={require("../../assets/images/bike.png")}
             username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/beatrice.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/tabitha.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/reiner.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/sky.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
-          />
-          <ChatBox
-            image={require("../../assets/images/beatrice.png")}
-            username="tzefoong"
-            borderColor={colorScheme === 'dark' ? 'white' : 'black'}
           />
         </View>
       </ScrollView>
@@ -177,6 +145,6 @@ chatUsername: {
   marginLeft: 10,
   flexDirection: 'column',
   alignSelf: 'flex-start',
-  marginBottom: 45
+  marginBottom: 25
 },
 });
