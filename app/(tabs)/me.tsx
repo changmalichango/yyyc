@@ -99,7 +99,11 @@ USER NAME AND EMAIL */}
       EDIT PROFILE */}
 
       <View style={{ marginTop: 40 }}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace("/edit profile");
+          }}
+        >
           <View style={styles.functionBox}>
             <Feather name="edit" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Edit Profile</Text>
