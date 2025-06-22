@@ -12,6 +12,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import fetch from "../test";
 
 export default function MeScreen() {
   const router = useRouter();

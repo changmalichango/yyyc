@@ -45,33 +45,32 @@ export default function ListScreen() {
       allowsEditing: true,
       aspect: [4, 3],
       base64: true,
-      quality: 1,
+      quality: 0.5,
     });
 
-    console.log(result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       const base64 = result.assets[0].base64;
       const fileName = `${Date.now()}.jpg`;
-
-      const { error } = await supabase.storage
+      console.log(result.assets[0].uri);
+      const { error: uploadError } = await supabase.storage
         .from("listing-images")
         .upload(fileName, decode(base64!), {
           contentType: "image/jpeg",
           upsert: true,
         });
-      if (error) {
+      if (uploadError) {
         Alert.alert("its here");
       } else {
         Alert.alert("Upload Sucessful");
       }
 
-      const { data } = supabase.storage
+      const { data, error } = await supabase.storage
         .from("listing-images")
-        .getPublicUrl(fileName);
+        .createSignedUrl(fileName, 10000);
 
-      setImageUrl(data?.publicUrl);
-      console.log(data?.publicUrl);
+      setImageUrl(data?.signedUrl ?? null);
+      console.log(data?.signedUrl);
     }
   };
 

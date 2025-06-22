@@ -1,106 +1,76 @@
 import { supabase } from "@/authen/supabase";
-import { Ionicons } from "@expo/vector-icons";
-import { decode } from "base64-arraybuffer";
-import * as ImagePicker from "expo-image-picker";
+import { Feather } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  Alert,
+  FlatList,
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  useColorScheme,
 } from "react-native";
 
-export default function ListScreen() {
-  const colorScheme = useColorScheme();
-  const styleColor =
-    colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
-  const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
+export default function TestSceen() {
+  // type Listing = {
+  //   id: number;
+  //   uid: string;
+  //   image_url: string;
+  //   title: string;
+  //   created_at: string;
+  // };
+  const [listing, setListing] = useState<any[]>([]);
 
-  const [item, setItem] = useState("");
-  const [selectedCondition, setSelectedCondition] = useState("");
-  const [price, setPrice] = useState("");
-  const [duration, setDuration] = useState("");
-  const [description, setdescription] = useState("");
-  const [address, setAddress] = useState("");
+  const fetchData = async () => {
+    const { data, error } = await supabase.from("uploads").select("*");
 
-  const [image, setImage] = useState<string | null>(null);
-
-  const [imageUri, setImageUri] = useState("");
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-    // const userId = await getUid();
-
-    if (!result.canceled) {
-      const base64 = result.assets[0].base64;
-      const fileName = `${Date.now()}.jpg`;
-
-      const { error } = await supabase.storage
-        .from("listing-images")
-        .upload(fileName, decode(base64!), {
-          contentType: "image/jpeg",
-          upsert: true,
-        });
-      if (error) {
-        Alert.alert("its here");
-      } else {
-        Alert.alert("Upload Sucessful");
-
-        const { data } = supabase.storage
-          .from("listing-images")
-          .getPublicUrl(fileName);
-
-        const imageUri = data.publicUrl;
-        console.log(imageUri);
-
-        return imageUri ?? null;
-      }
+    if (error) {
+      console.log(error.message);
+    } else {
+      setListing(data);
+      console.log(data);
     }
   };
 
-  // const [pic, setPic] = useState<string | null>(null);
-  // useEffect(async () => {
-  // const fetchuri = await pickImage();
-  // }, []);
   return (
-    <SafeAreaView style={[styles.container, styleColor]}>
-      {/* IMAGE BOX
-        ////////////////////////////////////////////////////////////////////////// */}
+    <TouchableOpacity onPress={fetchData}>
+      <View style={styles.functionBox}>
+        <Feather name="heart" size={24} style={styles.icons} />
+        <Text style={styles.boxText}>Favourtes</Text>
+        <Feather
+          name="chevron-right"
+          size={24}
+          color={"green"}
+          style={{ paddingRight: 15 }}
+        />
+        <Image
+          source={{
+            uri: "https://adzwyoignwrwrmtndhsn.supabase.co/storage/v1/object/public/listing-images/1750590963959.jpg",
+          }}
+          style={{ width: 200, height: 200, borderRadius: 10 }}
+        />
+      </View>
 
-      <View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={[textColor, styles.textOnBox]}>Image</Text>
-          <Text style={{ marginTop: 15, color: "grey" }}>
-            (maximum of 3 images)
-          </Text>
-        </View>
+      <FlatList
+        data={listing}
+        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+        renderItem={({ item }) => (
+          <View style={{ marginBottom: 20 }}>
+            <Image
+              source={{
+                uri: item.image_url,
+              }}
+              style={{ width: 200, height: 200 }}
+              onLoadStart={() => console.log("Loading image...")}
+              onLoadEnd={() => console.log("Image loaded")}
+              onError={() => console.log("Image failed to load")}
+            />
 
-        {/* <View style={[styles.imageBox]}></View> */}
-        <TouchableOpacity style={styles.imageBox} onPress={pickImage}>
-          {image && <Image source={{ uri: image }} style={styles.image} />}
-          <View style={styles.icon}>
-            <Ionicons name="add" size={40} color={"grey"} />
+            <Text>{item.item}</Text>
+            <Text style={{ color: "gray" }}>{item.description}</Text>
           </View>
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <TouchableOpacity style={styles.uploadBox}>
-          <Text style={{ fontWeight: "bold", color: "white" }}>UPLOAD</Text>
-          {/* <Image source={{uri:}} */}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        )}
+      />
+    </TouchableOpacity>
   );
 }
 
@@ -109,85 +79,89 @@ const styles = StyleSheet.create({
   lightStyle: { backgroundColor: "white" },
   darkText: { color: "black" },
   lightText: { color: "white" },
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
+  titleBox: { alignItems: "center", marginTop: 20 },
+  titleText: { fontWeight: "bold", fontSize: 20 },
 
-  container: { flex: 1 },
-  container2: { backgroundColor: "", paddingLeft: 10, paddingTop: 10 },
-  title: {
-    fontSize: 20,
-    alignSelf: "center",
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  textOnBox: { fontWeight: "bold", marginTop: 15, marginBottom: 2 },
-  box1: {
-    // backgroundColor: "blue",
-    height: 50,
-    width: "95%",
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "#bbbbbb",
-    justifyContent: "center",
-  },
-  box2: {
-    height: 50,
-    width: "40%",
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "grey",
-    justifyContent: "center",
-  },
-  dropbox: {
-    height: 50,
-    width: "40%",
-    // borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "grey",
-    justifyContent: "center",
-  },
-  box3: {
-    // backgroundColor: "blue",
+  picBox: { alignItems: "center", marginTop: 20 },
+  circleOutside: {
     height: 150,
-    width: "95%",
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "grey",
-    // justifyContent: "center",
-  },
-  imageBox: {
-    // color: "grey",
-    height: 50,
-    flexDirection: "row",
-    width: 50,
-    // borderWidth: 2,
-    borderRadius: 4,
-    borderColor: "grey",
-    justifyContent: "space-between",
+    width: 150,
     alignItems: "center",
+    justifyContent: "center",
+    borderColor: "green",
+    padding: 0,
+    borderRadius: 75,
   },
-  icon: {
-    height: 50,
-    flexDirection: "row",
-    width: 50,
+  circleInside: {
+    height: 145,
+    width: 145,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circleOutside2: {
+    height: 120,
+    width: 120,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "green",
+    padding: 0,
+
+    borderRadius: 75,
+  },
+  circleInside2: {
+    height: 115,
+    width: 115,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circletrans: {
+    height: 100,
+    width: 100,
+    borderColor: "#f6f6f6",
     borderWidth: 2,
-    borderRadius: 4,
-    borderColor: "grey",
-    justifyContent: "center",
+    borderRadius: 100,
     alignItems: "center",
-    borderStyle: "dashed",
-  },
-  image: {
-    width: 50,
-    height: 50,
-  },
-  uploadBox: {
-    marginTop: 15,
-    backgroundColor: "darkgreen",
-    height: 50,
-    width: "95%",
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "grey",
     justifyContent: "center",
+  },
+  picture: {
+    height: 100,
+    width: 100,
+  },
+  profilePic: { height: 70, resizeMode: "contain", borderRadius: 100 },
+
+  functionBox: {
+    // backgroundColor: "#aaaaaa",
+    width: 400,
+    height: 60,
+    // borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 10,
+    // marginTop: 20,
     alignItems: "center",
+    // justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  boxText: {
+    alignSelf: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+    paddingLeft: 20,
+    marginRight: 170,
+
+    width: 130,
+  },
+  icons: {
+    color: "#E2D7AB",
+    marginLeft: 15,
+    backgroundColor: "#0F4415",
+    borderWidth: 10,
+    borderRadius: 100,
+    borderColor: "#0F4415",
   },
 });
