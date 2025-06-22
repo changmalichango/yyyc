@@ -1,4 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -14,6 +15,7 @@ import {
 
 export default function ListingsScreen() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
@@ -23,19 +25,20 @@ export default function ListingsScreen() {
     price: number;
     username: string;
     image: any;
+    rate: string;
   }
 
-  const Card: React.FC<Props> = ({title, price, username, image}) => (
-    <View style={[styles.itemCard, themeColor]}> 
-      <Image source={image} style={styles.image} />
-      <View>
-        <Text style={[styles.itemTitle, textColor]}>{title}</Text>
-        <Text style={styles.price}>${price}</Text>  
-        <Text style={styles.username}>@{username}</Text>
-      </View>
-    </View>
+  const Card: React.FC<Props> = ({title, price, username, image, rate}) => (
+  <TouchableOpacity onPress ={() => router.push({pathname: 
+    "/itemdetails", params: {title, price: price.toString(), image, rate,}
+  })}  
+  style={[styles.itemCard, themeColor]}> 
+        <Image source={image} style={styles.image} />
+          <Text style={[styles.itemTitle, textColor]}>{title}</Text>
+          <Text style={styles.price}>${price}/{rate}</Text>  
+          <Text style={styles.username}>@{username}</Text>
+  </TouchableOpacity>    
   )
-
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       {/* ///////////////////////////////////// */}
@@ -63,19 +66,20 @@ export default function ListingsScreen() {
         {/* ///////////////////////////////////// */}
 
       <FlatList
-        contentContainerStyle={[styles.container, {paddingBottom: 200}]}
+        contentContainerStyle={[styles.container, {paddingBottom: 150}]}
         data={[
-          { title: "Eiffel Tower", price: 100, username: "yy", image: require("../../assets/images/eiffertower.png") },
-          { title: "Reiner", price: 200, username: "yc", image: require("../../assets/images/reiner.png") },
-          { title: "Sky", price: 300, username: "tzefoong", image: require("../../assets/images/sky.png") },
-          { title: "Mountains", price: 400, username: "john_doe", image: require("../../assets/images/guitar.png") },
-          { title: "Beach House", price: 500, username: "jane_doe", image: require("../../assets/images/eiffertower.png") },
-          { title: "Guitar", price: 20, username: "jiawen", image: require("../../assets/images/indian.png")},
+          { title: "Eiffel Tower", price: 100, rate: "day", username: "yy", image: require("../../assets/images/eiffertower.png") },
+          { title: "Reiner", price: 200, rate: "hour", username: "yc", image: require("../../assets/images/reiner.png") },
+          { title: "Sky", price: 300, rate: "week", username: "tzefoong", image: require("../../assets/images/sky.png") },
+          { title: "Mountains", price: 400, rate: "month", username: "john_doe", image: require("../../assets/images/guitar.png") },
+          { title: "Beach House", price: 500, rate: "year", username: "jane_doe", image: require("../../assets/images/eiffertower.png") },
+          { title: "Gay", price: 69, rate: "decade", username: 'jiawen', image: require("../../assets/images/tabitha.png") }
         ]}
         renderItem={({ item }) => (
           <Card
             title={item.title}
             price={item.price}
+            rate={item.rate}
             username={item.username}
             image={item.image}
           />
@@ -161,7 +165,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
   itemCard:{
