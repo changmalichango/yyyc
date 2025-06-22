@@ -156,10 +156,10 @@ export const dropdownConditionStyle = StyleSheet.create({
 });
 
 export const duration = [
-  { label: "per day", value: "per day" },
-  { label: "per week", value: "per week" },
-  { label: "per month", value: "per month" },
-  { label: "per year", value: "per year" },
+  { label: "per day", value: "day" },
+  { label: "per week", value: "week" },
+  { label: "per month", value: "month" },
+  { label: "per year", value: "year" },
 ];
 
 export const DropdownDuration = ({

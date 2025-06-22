@@ -41,21 +41,27 @@ export default function ListingsScreen() {
     title: string;
     price: number;
     username: string;
-    image: any;
+    image_url: any;
     rate: string;
   };
 
-  const Card: React.FC<Props> = ({ title, price, username, image, rate }) => (
+  const Card: React.FC<Props> = ({
+    title,
+    price,
+    username,
+    image_url,
+    rate,
+  }) => (
     <TouchableOpacity
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: { title, price: price.toString(), image, rate },
+          params: { title, price: price.toString(), image_url, rate },
         })
       }
       style={[styles.itemCard, themeColor]}
     >
-      <Image source={{ uri: image }} style={styles.image} />
+      <Image source={{ uri: image_url }} style={styles.image} />
       <Text style={[styles.itemTitle, textColor]}>{title}</Text>
       <Text style={styles.price}>
         ${price}/{rate}
@@ -97,7 +103,7 @@ export default function ListingsScreen() {
             price={item.price}
             rate={item.duration}
             username={item.name}
-            image={item.image_url}
+            image_url={item.image_url}
           />
         )}
         keyExtractor={(item) => item.title}
