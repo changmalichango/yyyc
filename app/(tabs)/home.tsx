@@ -1,7 +1,9 @@
+import { supabase } from "@/authen/supabase";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   Image,
   SafeAreaView,
@@ -10,7 +12,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
 
 export default function ListingsScreen() {
@@ -19,39 +21,60 @@ export default function ListingsScreen() {
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  
+
+  const [listing, setListing] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getList = async () => {
+      const { data: list, error } = await supabase.from("uploads").select("*");
+      if (error) {
+        Alert.alert("error.message");
+      } else {
+        setListing(list);
+      }
+    };
+
+    getList();
+  }, []);
+
   type Props = {
     title: string;
     price: number;
     username: string;
     image: any;
     rate: string;
-  }
+  };
 
-  const Card: React.FC<Props> = ({title, price, username, image, rate}) => (
-  <TouchableOpacity onPress ={() => router.push({pathname: 
-    "/itemdetails", params: {title, price: price.toString(), image, rate,}
-  })}  
-  style={[styles.itemCard, themeColor]}> 
-        <Image source={image} style={styles.image} />
-          <Text style={[styles.itemTitle, textColor]}>{title}</Text>
-          <Text style={styles.price}>${price}/{rate}</Text>  
-          <Text style={styles.username}>@{username}</Text>
-  </TouchableOpacity>    
-  )
+  const Card: React.FC<Props> = ({ title, price, username, image, rate }) => (
+    <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/itemdetails",
+          params: { title, price: price.toString(), image, rate },
+        })
+      }
+      style={[styles.itemCard, themeColor]}
+    >
+      <Image source={{ uri: image }} style={styles.image} />
+      <Text style={[styles.itemTitle, textColor]}>{title}</Text>
+      <Text style={styles.price}>
+        ${price}/{rate}
+      </Text>
+      <Text style={styles.username}>@{username}</Text>
+    </TouchableOpacity>
+  );
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       {/* ///////////////////////////////////// */}
       {/* TOP BAR AND SEARCHING BAR!!!!!!!!!!!! */}
-      <View style ={styles.topSection}>
+      <View style={styles.topSection}>
         <View style={styles.logoTitle}>
           <Image
             source={require("../../assets/images/logo.png")}
             style={styles.logo}
           />
           <Text style={styles.logoText}>CanIRent</Text>
-        </View>  
-        
+        </View>
 
         {/* ///////////////////////////////////// */}
         {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
@@ -62,26 +85,19 @@ export default function ListingsScreen() {
             <Text style={styles.btnText}>Go!</Text>
           </TouchableOpacity>
         </View>
-      </View>  
-        {/* ///////////////////////////////////// */}
+      </View>
+      {/* ///////////////////////////////////// */}
 
       <FlatList
-        contentContainerStyle={[styles.container, {paddingBottom: 150}]}
-        data={[
-          { title: "Eiffel Tower", price: 100, rate: "day", username: "yy", image: require("../../assets/images/eiffertower.png") },
-          { title: "Reiner", price: 200, rate: "hour", username: "yc", image: require("../../assets/images/reiner.png") },
-          { title: "Sky", price: 300, rate: "week", username: "tzefoong", image: require("../../assets/images/sky.png") },
-          { title: "Mountains", price: 400, rate: "month", username: "john_doe", image: require("../../assets/images/guitar.png") },
-          { title: "Beach House", price: 500, rate: "year", username: "jane_doe", image: require("../../assets/images/eiffertower.png") },
-          { title: "Gay", price: 69, rate: "decade", username: 'jiawen', image: require("../../assets/images/tabitha.png") }
-        ]}
+        contentContainerStyle={[styles.container, { paddingBottom: 150 }]}
+        data={listing}
         renderItem={({ item }) => (
           <Card
-            title={item.title}
+            title={item.item}
             price={item.price}
-            rate={item.rate}
-            username={item.username}
-            image={item.image}
+            rate={item.duration}
+            username={item.name}
+            image={item.image_url}
           />
         )}
         keyExtractor={(item) => item.title}
@@ -90,8 +106,8 @@ export default function ListingsScreen() {
         showsVerticalScrollIndicator={false}
         style={[styles.details]}
       />
-  </SafeAreaView>
-  )
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -102,15 +118,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   bottomSection: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
     paddingHorizontal: 12,
     rowGap: 24,
   },
   titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
@@ -159,43 +175,49 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
     alignItems: "center",
   },
-  image: { width: '100%', height: 200, marginRight: 19, borderRadius: 8, resizeMode: 'contain'},
+  image: {
+    width: "100%",
+    height: 200,
+    marginRight: 19,
+    borderRadius: 8,
+    resizeMode: "contain",
+  },
   scrollView: {
     paddingBottom: 0,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    resizeMode: 'cover',
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    resizeMode: "cover",
   },
   label: { marginTop: 8, fontSize: 18, fontWeight: "600" },
-  itemCard:{
-    width: '48%',
-    backgroundColor: '#fff',
+  itemCard: {
+    width: "48%",
+    backgroundColor: "#fff",
     borderRadius: 8,
-    padding:10,
+    padding: 10,
     elevation: 2,
     marginLeft: 5,
     marginBottom: 0,
   },
   itemTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 25,
-    color: 'black',
+    color: "black",
     paddingTop: 2,
-    marginLeft: 11.9
+    marginLeft: 11.9,
   },
   price: {
-    fontSize:20,
-    color: '#28a745',
+    fontSize: 20,
+    color: "#28a745",
     fontWeight: 600,
     marginLeft: 11.9,
   },
-  username:{
+  username: {
     fontSize: 15,
-    color: '#888',
+    color: "#888",
     marginLeft: 11.9,
   },
   details: {
     paddingBottom: 100,
-  }
+  },
 });
