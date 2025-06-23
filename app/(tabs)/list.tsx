@@ -67,7 +67,7 @@ export default function ListScreen() {
 
       const { data, error } = await supabase.storage
         .from("listing-images")
-        .createSignedUrl(fileName, 10000);
+        .createSignedUrl(fileName, 3000000);
 
       setImageUrl(data?.signedUrl ?? null);
       console.log(data?.signedUrl);

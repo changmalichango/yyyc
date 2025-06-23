@@ -37,6 +37,16 @@ export const getName = async (): Promise<string | null> => {
   return username?.name ?? null;
 };
 
+export const getImageUrl = async (): Promise<string | null> => {
+  const myUid = await getUid();
+  const { data: username, error } = await supabase
+    .from("users")
+    .select("profile_pic")
+    .eq("uid", myUid)
+    .maybeSingle();
+  return username?.profile_pic ?? null;
+};
+
 // DROPDOWN
 // //////////////////////////////////////////////
 
@@ -263,3 +273,70 @@ export const dropdownConditionStyle2 = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export const sex = [
+  { label: "male", value: "male" },
+  { label: "female", value: "female" },
+  { label: "prefer not to say", value: null },
+];
+
+export const DropdownSex = ({
+  onValueChange,
+}: {
+  onValueChange: (val: string) => void;
+}) => {
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const handleChange = (item: any) => {
+    setValue(item.value);
+    setIsFocus(false);
+    onValueChange(item.value);
+  };
+
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return (
+        <Text
+          style={[dropdownConditionStyle2.label, isFocus && { color: "blue" }]}
+        ></Text>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <View style={dropdownConditionStyle2.container}>
+      {renderLabel()}
+      <Dropdown
+        style={[
+          dropdownConditionStyle2.dropdown,
+          isFocus && { borderColor: "blue" },
+        ]}
+        placeholderStyle={dropdownConditionStyle2.placeholderStyle}
+        selectedTextStyle={dropdownConditionStyle2.selectedTextStyle}
+        inputSearchStyle={dropdownConditionStyle2.inputSearchStyle}
+        iconStyle={dropdownConditionStyle2.iconStyle}
+        data={sex}
+        // search
+        maxHeight={300}
+        labelField="label"
+        valueField="value"
+        placeholder={!isFocus ? "Select " : "..."}
+        searchPlaceholder="Search..."
+        value={value}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        onChange={handleChange}
+        // renderLeftIcon={() => (
+        //   <AntDesign
+        //     style={dropdownConditionStyle.icon}
+        //     color={isFocus ? "blue" : "black"}
+        //     name="Safety"
+        //     size={20}
+        //   />
+        // )}
+      />
+    </View>
+  );
+};

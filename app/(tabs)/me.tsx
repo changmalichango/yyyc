@@ -1,4 +1,5 @@
-import { getEmail, getName } from "@/assets/functions";
+import { getEmail, getImageUrl, getName } from "@/assets/functions";
+import { supabase } from "@/authen/supabase";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -12,7 +13,6 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import fetch from "../test";
 
 export default function MeScreen() {
   const router = useRouter();
@@ -38,6 +38,16 @@ export default function MeScreen() {
       setEmail(email);
     };
     fetchEmail();
+  }, []);
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchImage = async () => {
+      const url = await getImageUrl();
+      setImageUrl(url);
+    };
+
+    fetchImage();
   }, []);
 
   return (
@@ -73,7 +83,11 @@ export default function MeScreen() {
                   style={styles.circletrans}
                 >
                   <ImageBackground
-                    source={require("../../assets/images/bike.png")}
+                    source={
+                      imageUrl
+                        ? { uri: imageUrl }
+                        : require("../../assets/images/defaultpfp.png")
+                    }
                     style={styles.picture}
                   ></ImageBackground>
                 </LinearGradient>
@@ -151,7 +165,12 @@ USER NAME AND EMAIL */}
 
         {/* LOG OUT
         ///////////////////////////////////////////////////////////// */}
-        <TouchableOpacity onPress={() => router.replace("/test")}>
+        <TouchableOpacity
+          onPress={() => {
+            supabase.auth.signOut();
+            router.replace("/login");
+          }}
+        >
           <View style={styles.functionBox}>
             <Feather name="log-out" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Log Out</Text>
