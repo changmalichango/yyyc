@@ -184,7 +184,13 @@ export default function ListScreen() {
                 paddingLeft: 5,
                 fontSize: 15,
                 paddingTop: 5,
+                textAlignVertical: 'top',
+                flexShrink: 1,
+                overflow: 'hidden',
+                includeFontPadding: false,
+                width: '100%'
               }}
+              multiline
               value={description}
               onChangeText={setdescription}
             />
@@ -282,6 +288,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "grey",
+    flexWrap: 'wrap',
     // justifyContent: "center",
   },
   imageBox: {

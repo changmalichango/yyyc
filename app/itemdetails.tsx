@@ -1,7 +1,9 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -9,6 +11,11 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
 export const options = {
   headerShown: false,
@@ -20,36 +27,55 @@ export default function ItemDetailsScreen() {
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  const { title, price, image_url, rate } = useLocalSearchParams();
+  const { Title, price, image_url, rate, description, } = useLocalSearchParams();
+  
+  const [liked, setLiked] = useState(false);
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const onPress = () => {
+    setLiked((prev) => !prev);
+    scale.value = withSpring(1.3, {}, () => {
+      scale.value = withSpring(1);
+    });
+  };
+  
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       <ScrollView style={styles.container}>
         <Image source={{ uri: image_url as string }} style={styles.image} />
-        <Text style={[styles.title, textColor]}>{title}</Text>
+        <Text style={[styles.title, textColor]}>{Title}</Text>
         <Text style={[styles.price]}>
           ${price} per {rate}
         </Text>
         <Text style={[styles.condition, textColor]}>Condition</Text>
         <Text style={[styles.actualCondition, textColor]}>9</Text>
         <Text style={[styles.details, textColor]}>Description</Text>
-        <Text style={[styles.description, textColor]}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt moll
-          ahslkjdfhlkjlasdjhkgfbljkabdfgljkbalsdfkgblhbsdfglhblsd
-        </Text>
+        <Text style={[styles.description, textColor]}>{description}</Text>
         <Text style={[styles.location, textColor]}>Location</Text>
         <Text style={[styles.mrt, textColor]}>Sengkang</Text>
       </ScrollView>
 
       <View style={[styles.bottomSection]}>
+        <View>
+          <Pressable onPress={onPress}>
+            <Animated.View style={[styles.heartWrapper, animatedStyle]}>
+              <FontAwesome
+                name="heart"
+                size={30}
+                color={liked ? "red" : "white"}
+              />
+            </Animated.View>
+    </Pressable>
+        </View>
         <View style={styles.chatBox}>
           <Image
-            source={require("../assets/images/chaticon.jpg")}
+            source={require("../assets/images/chatIcon.webp")}
             style={styles.chatIconImage}
           />
           <Text style={styles.chatText}>Chat</Text>
@@ -129,27 +155,43 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   bottomSection: {
-    paddingTop: 20,
-    backgroundColor: "grey",
-    height: 60,
+    backgroundColor: "brown",
+    height: 50,
+    flexDirection: 'row',
+    gap: 10,
   },
   chatBox: {
     width: "20%",
-    height: "90%",
-    padding: 5,
-    justifyContent: "center",
-    backgroundColor: "red",
-    alignSelf: "center",
-    flexWrap: "wrap",
+    height: "100%",
+    backgroundColor: "#006400",
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    borderRadius: 10,
   },
   chatText: {
-    fontWeight: "bold",
     fontSize: 17,
-    alignSelf: "center",
+    alignSelf: 'center',
+    color: 'white',
+    marginRight: 10,
   },
   chatIconImage: {
     height: 25,
-    width: 25,
+    width: 30,
     alignSelf: "center",
+    marginLeft: 10,
   },
+  heartWrapper: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    height: '100%',
+    width: 40,
+    marginLeft: 10,
+  },
+  heartIcon: {
+    height: '100%',
+    width: 40,
+    marginLeft: 10,
+  },
+
 });

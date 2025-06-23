@@ -38,31 +38,33 @@ export default function ListingsScreen() {
   }, []);
 
   type Props = {
-    title: string;
+    Title: string;
     price: number;
     username: string;
     image_url: any;
     rate: string;
+    description: string;
   };
 
   const Card: React.FC<Props> = ({
-    title,
+    Title,
     price,
     username,
     image_url,
     rate,
+    description,
   }) => (
     <TouchableOpacity
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: { title, price: price.toString(), image_url, rate },
+          params: { Title, price: price.toString(), image_url, rate, description, },
         })
       }
       style={[styles.itemCard, themeColor]}
     >
       <Image source={{ uri: image_url }} style={styles.image} />
-      <Text style={[styles.itemTitle, textColor]}>{title}</Text>
+      <Text style={[styles.itemTitle, textColor]}>{Title}</Text>
       <Text style={styles.price}>
         ${price}/{rate}
       </Text>
@@ -99,14 +101,15 @@ export default function ListingsScreen() {
         data={listing}
         renderItem={({ item }) => (
           <Card
-            title={item.item}
+            Title={item.item}
             price={item.price}
             rate={item.duration}
             username={item.name}
             image_url={item.image_url}
+            description={item.description}
           />
         )}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         columnWrapperStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}
