@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     marginRight: 19,
-    borderRadius: 8,
+    borderRadius: 20,
     resizeMode: "contain",
   },
   scrollView: {

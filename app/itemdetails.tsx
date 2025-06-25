@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
@@ -23,13 +23,16 @@ export const options = {
 
 export default function ItemDetailsScreen() {
   const colorScheme = useColorScheme();
+  const [liked, setLiked] = useState(false);
   const router = useRouter();
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const { Title, price, image_url, rate, description, } = useLocalSearchParams();
-  
-  const [liked, setLiked] = useState(false);
+
+
+
+
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -37,13 +40,14 @@ export default function ItemDetailsScreen() {
       transform: [{ scale: scale.value }],
     };
   });
-
+  
   const onPress = () => {
     setLiked((prev) => !prev);
     scale.value = withSpring(1.3, {}, () => {
       scale.value = withSpring(1);
     });
   };
+  
   
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>

@@ -38,7 +38,7 @@ export default function LoginScreen() {
       if (!username) {
         router.replace("/firstimeUser");
       } else {
-        router.replace("/home");
+        router.replace("/(tabs)/home");
       }
     }
   };
