@@ -39,6 +39,7 @@ export default function ListingsScreen() {
 
   type Props = {
     Title: string;
+    user_uid: string;
     price: number;
     username: string;
     image_url: any;
@@ -49,6 +50,7 @@ export default function ListingsScreen() {
   const Card: React.FC<Props> = ({
     Title,
     price,
+    user_uid,
     username,
     image_url,
     rate,
@@ -58,7 +60,14 @@ export default function ListingsScreen() {
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: { Title, price: price.toString(), image_url, rate, description, },
+          params: {
+            Title,
+            price: price.toString(),
+            image_url,
+            rate,
+            description,
+            user_uid,
+          },
         })
       }
       style={[styles.itemCard, themeColor]}
@@ -68,6 +77,7 @@ export default function ListingsScreen() {
       <Text style={styles.price}>
         ${price}/{rate}
       </Text>
+
       <Text style={styles.username}>@{username}</Text>
     </TouchableOpacity>
   );
@@ -107,6 +117,7 @@ export default function ListingsScreen() {
             username={item.name}
             image_url={item.image_url}
             description={item.description}
+            user_uid={item.uid}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

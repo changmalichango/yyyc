@@ -1,13 +1,17 @@
+import { getUid } from "@/assets/functions";
+import { supabase } from "@/authen/supabase";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useLocalSearchParams, useRouter, } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
@@ -28,10 +32,54 @@ export default function ItemDetailsScreen() {
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  const { Title, price, image_url, rate, description, } = useLocalSearchParams();
 
+  const CheckChat = async () => {
+    const seller_uid = user_uid;
+    const buyer_uid = await getUid();
 
+    // CHECKING IF THE CHAT EXISTS
+    // ///////////////////////////////////////////////////////
 
+    if (buyer_uid === seller_uid) {
+      Alert.alert("You cannot chat with yourself!");
+    } else {
+      const { data: existence, error: error1 } = await supabase
+        .from("chats")
+        .select("*")
+        .or(
+          `and(user_1.eq.${seller_uid},user_2.eq.${buyer_uid}),and(user_2.eq.${seller_uid},user_1.eq.${buyer_uid})`
+        )
+        .maybeSingle();
+
+      if (error1) {
+        Alert.alert(error1.message);
+      } else {
+        // INSERT IF NOT EXISTENT
+        // ///////////////////////////////////////////
+
+        if (!existence) {
+          const { data: table, error: error2 } = await supabase
+            .from("chats")
+            .insert({
+              user_1: buyer_uid,
+              user_2: seller_uid,
+            })
+            .select()
+            .single();
+
+          if (error2) Alert.alert(error2.message);
+          else console.log("created new chat");
+          console.log(table.id);
+        } else {
+          console.log("chat existed");
+
+          console.log(existence.id);
+        }
+      }
+    }
+  };
+  const { Title, price, image_url, rate, description, user_uid } =
+    useLocalSearchParams();
 
   const scale = useSharedValue(1);
 
@@ -40,15 +88,14 @@ export default function ItemDetailsScreen() {
       transform: [{ scale: scale.value }],
     };
   });
-  
+
   const onPress = () => {
     setLiked((prev) => !prev);
     scale.value = withSpring(1.3, {}, () => {
       scale.value = withSpring(1);
     });
   };
-  
-  
+
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
       <ScrollView style={styles.container}>
@@ -75,14 +122,16 @@ export default function ItemDetailsScreen() {
                 color={liked ? "red" : "white"}
               />
             </Animated.View>
-    </Pressable>
+          </Pressable>
         </View>
         <View style={styles.chatBox}>
           <Image
             source={require("../assets/images/chatIcon.webp")}
             style={styles.chatIconImage}
           />
-          <Text style={styles.chatText}>Chat</Text>
+          <TouchableOpacity style={styles.chatText} onPress={CheckChat}>
+            <Text style={styles.chatText}>Chat</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -161,22 +210,22 @@ const styles = StyleSheet.create({
   bottomSection: {
     backgroundColor: "brown",
     height: 50,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
   },
   chatBox: {
     width: "20%",
     height: "100%",
     backgroundColor: "#006400",
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 10,
   },
   chatText: {
     fontSize: 17,
-    alignSelf: 'center',
-    color: 'white',
+    alignSelf: "center",
+    color: "white",
     marginRight: 10,
   },
   chatIconImage: {
@@ -186,16 +235,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   heartWrapper: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    height: '100%',
+    justifyContent: "center",
+    alignContent: "center",
+    height: "100%",
     width: 40,
     marginLeft: 10,
   },
   heartIcon: {
-    height: '100%',
+    height: "100%",
     width: 40,
     marginLeft: 10,
   },
-
 });

@@ -150,7 +150,7 @@ USER NAME AND EMAIL */}
         {/* 
         Order HISTORY
         /////////////////////////////////////////////////////// */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.replace("/test")}>
           <View style={styles.functionBox}>
             <Feather name="book-open" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Order History</Text>
