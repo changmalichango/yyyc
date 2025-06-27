@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useColorScheme,
 } from "react-native";
@@ -73,20 +74,43 @@ export default function ChatScreen() {
   type Props = {
     image: any;
     username: string;
+    chatId: string;
+    otherUserUid: string;
   };
 
-  const ChatBox: React.FC<Props> = ({ username, image }) => (
-    <View style={[styles.chatRectangle]}>
-      <Image
-        source={
-          image ? { uri: image } : require("../../assets/images/defaultpfp.png")
-        }
-        style={styles.circlePfp}
-      />
-      <View>
-        <Text style={styles.chatUsername}>@{username}</Text>
+  const ChatBox: React.FC<Props> = ({
+    username,
+    image,
+    chatId,
+    otherUserUid,
+  }) => (
+    <TouchableOpacity
+      onPress={() => {
+        router.push({
+          pathname: "/(tabs)/chatroom",
+          params: {
+            chatId,
+            otherUserUid,
+            username,
+            image,
+          },
+        });
+      }}
+    >
+      <View style={[styles.chatRectangle]}>
+        <Image
+          source={
+            image
+              ? { uri: image }
+              : require("../../assets/images/defaultpfp.png")
+          }
+          style={styles.circlePfp}
+        />
+        <View>
+          <Text style={styles.chatUsername}>@{username}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -105,7 +129,12 @@ export default function ChatScreen() {
         ]}
         data={listing}
         renderItem={({ item }) => (
-          <ChatBox username={item.username} image={item.image_url} />
+          <ChatBox
+            username={item.username}
+            image={item.image_url}
+            chatId={item.chat_id}
+            otherUserUid={item.otherUserUid}
+          />
         )}
         keyExtractor={(item) => item.chatId}
         numColumns={1}
