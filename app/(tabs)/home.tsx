@@ -24,42 +24,40 @@ export default function ListingsScreen() {
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
 
   const [listing, setListing] = useState<any[]>([]);
-  const [refreshing, setRefreshing] =useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getList = async () => {
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-  if (userError) {
-    Alert.alert(userError.message);
-    return;
-  }
+    if (userError) {
+      Alert.alert(userError.message);
+      return;
+    }
 
-  const { data: list, error } = await supabase
-    .from("uploads")
-    .select("*")
-    .neq("uid", user.id);
+    const { data: list, error } = await supabase
+      .from("uploads")
+      .select("*")
+      .neq("uid", user?.id);
 
-  if (error) {
-    Alert.alert(error.message);
-  } else {
-    setListing(list);
-  }
-};
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      setListing(list);
+    }
+  };
 
-const onRefresh = async () => {
-  setRefreshing(true);
-  await getList();
-  setRefreshing(false);
-};
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getList();
+    setRefreshing(false);
+  };
 
-
-  
   useEffect(() => {
-  getList();
-}, []);
+    getList();
+  }, []);
 
   type Props = {
     Title: string;
@@ -151,8 +149,7 @@ const onRefresh = async () => {
         style={[styles.details]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-}
-
+        }
       />
     </SafeAreaView>
   );

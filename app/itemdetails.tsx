@@ -129,7 +129,12 @@ export default function ItemDetailsScreen() {
             source={require("../assets/images/chatIcon.webp")}
             style={styles.chatIconImage}
           />
-          <TouchableOpacity style={styles.chatText} onPress={CheckChat}>
+          <TouchableOpacity
+            style={styles.chatText}
+            onPress={async () => {
+              await CheckChat(), router.replace("/(tabs)/chat");
+            }}
+          >
             <Text style={styles.chatText}>Chat</Text>
           </TouchableOpacity>
         </View>
