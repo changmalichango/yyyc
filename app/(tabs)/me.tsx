@@ -150,7 +150,7 @@ USER NAME AND EMAIL */}
         {/* 
         My Listings
         /////////////////////////////////////////////////////// */}
-        <TouchableOpacity onPress={() => router.replace("/test")}>
+        <TouchableOpacity onPress={() => router.replace("/My Listings")}>
           <View style={styles.functionBox}>
             <Feather name="book-open" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>My Listings</Text>

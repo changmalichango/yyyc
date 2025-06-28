@@ -1,5 +1,6 @@
 import { getUid } from "@/assets/functions";
 import { supabase } from "@/authen/supabase";
+import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -98,6 +99,27 @@ export default function ItemDetailsScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
+      
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace("/home");
+          }}
+        >
+          <Entypo name="chevron-left" size={24} color="black" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            alignItems: "center",
+            marginLeft: 123,
+            fontWeight: "bold",
+            fontSize: 20,
+          }}
+        >
+          My Listings
+        </Text>
+      </View>
+      
       <ScrollView style={styles.container}>
         <Image source={{ uri: image_url as string }} style={styles.image} />
         <Text style={[styles.title, textColor]}>{Title}</Text>
@@ -217,6 +239,14 @@ const styles = StyleSheet.create({
     height: 50,
     flexDirection: "row",
     gap: 10,
+  },
+  header: {
+    backgroundColor: "green",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: 40,
+    paddingHorizontal: 16,
   },
   chatBox: {
     width: "20%",
