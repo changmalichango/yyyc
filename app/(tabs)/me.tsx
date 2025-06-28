@@ -137,7 +137,7 @@ USER NAME AND EMAIL */}
         <TouchableOpacity>
           <View style={styles.functionBox}>
             <Feather name="heart" size={24} style={styles.icons} />
-            <Text style={[textColor, styles.boxText]}>Favourtes</Text>
+            <Text style={[textColor, styles.boxText]}>Favourites</Text>
             <Feather
               name="chevron-right"
               size={24}
@@ -148,12 +148,12 @@ USER NAME AND EMAIL */}
         </TouchableOpacity>
 
         {/* 
-        Order HISTORY
+        My Listings
         /////////////////////////////////////////////////////// */}
         <TouchableOpacity onPress={() => router.replace("/test")}>
           <View style={styles.functionBox}>
             <Feather name="book-open" size={24} style={styles.icons} />
-            <Text style={[textColor, styles.boxText]}>Order History</Text>
+            <Text style={[textColor, styles.boxText]}>My Listings</Text>
             <Feather
               name="chevron-right"
               size={24}

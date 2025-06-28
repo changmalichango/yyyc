@@ -6,6 +6,7 @@ import {
   Alert,
   FlatList,
   Image,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -23,19 +24,42 @@ export default function ListingsScreen() {
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
 
   const [listing, setListing] = useState<any[]>([]);
+  const [refreshing, setRefreshing] =useState(false);
 
+  const getList = async () => {
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    Alert.alert(userError.message);
+    return;
+  }
+
+  const { data: list, error } = await supabase
+    .from("uploads")
+    .select("*")
+    .neq("uid", user.id);
+
+  if (error) {
+    Alert.alert(error.message);
+  } else {
+    setListing(list);
+  }
+};
+
+const onRefresh = async () => {
+  setRefreshing(true);
+  await getList();
+  setRefreshing(false);
+};
+
+
+  
   useEffect(() => {
-    const getList = async () => {
-      const { data: list, error } = await supabase.from("uploads").select("*");
-      if (error) {
-        Alert.alert("error.message");
-      } else {
-        setListing(list);
-      }
-    };
-
-    getList();
-  }, []);
+  getList();
+}, []);
 
   type Props = {
     Title: string;
@@ -125,6 +149,10 @@ export default function ListingsScreen() {
         columnWrapperStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}
         style={[styles.details]}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+}
+
       />
     </SafeAreaView>
   );
