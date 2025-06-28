@@ -107,7 +107,7 @@ export default function ChatScreen() {
           style={styles.circlePfp}
         />
         <View>
-          <Text style={styles.chatUsername}>@{username}</Text>
+          <Text style={styles.chatUsername}>{username}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -124,7 +124,6 @@ export default function ChatScreen() {
       <FlatList
         contentContainerStyle={[
           styles.container,
-          { paddingBottom: 200 },
           styles.bottomSection,
         ]}
         data={listing}
@@ -195,39 +194,38 @@ const styles = StyleSheet.create({
   },
 
   chatRectangle: {
-    // backgroundColor: "blue",
-
     flexDirection: "row",
     flex: 1,
     borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
     alignItems: "center",
     width: "100%",
     height: 20,
-    padding: 3,
     marginRight: 300,
+    paddingBottom: 30,
+    marginBottom: 30,
     // backgroundColor: "blue",
   },
 
   circlePfp: {
     width: 65,
     height: 65,
-    borderRadius: 150 / 2,
+    borderRadius: 75,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "grey",
     marginLeft: 7,
     alignSelf: "stretch",
+    marginBottom: 5,
   },
 
   chatUsername: {
-    fontSize: 30,
+    fontSize: 20,
     marginLeft: 10,
     flexDirection: "column",
     alignSelf: "flex-start",
-    // marginBottom: 25,
-    backgroundColor: "blue",
+    marginBottom: 5,
   },
   container: {
     // backgroundColor: "blue",

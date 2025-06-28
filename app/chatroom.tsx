@@ -75,7 +75,7 @@ export default function ChatroomScreen() {
   }, [chatId]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -164,3 +164,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
+
+export const options = {
+  headerShown: false,
+}

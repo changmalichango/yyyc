@@ -30,8 +30,8 @@ export default function ExploreTabLayout() {
           backgroundColor: 'white,'
         }
       }}>
-          <MaterialTopTabs.Screen name="rentIn" />
-          <MaterialTopTabs.Screen name="rentOut" />
+          <MaterialTopTabs.Screen name="Items Lent Out" />
+          <MaterialTopTabs.Screen name="Currently Borrowing" />
       </MaterialTopTabs>
     </View>  
   );

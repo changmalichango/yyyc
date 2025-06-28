@@ -26,7 +26,9 @@ const rentIn = () => {
     image: any;
   };
   const items = [
-    { id: "1", username: 'yyyc', Title: 'gay', image: require("../../../assets/images/reiner.png") }
+    { id: "1", username: 'yyyc', Title: 'gay', image: require("../../../assets/images/guitar.png") },
+    { id: "2", username: 'yyyc', Title: 'gf', image: require("../../../assets/images/beatrice.png") },
+    { id: "3", username: 'yyyc', Title: 'bf', image: require("../../../assets/images/sky.png") },
   ];
   
     const Box: React.FC<Props> = ({
@@ -45,8 +47,9 @@ const rentIn = () => {
       >
         <Image source={ require("../../../assets/images/guitar.png")} style={styles.image} />
           <View>
-            <Text style={[styles.itemTitle, styles.words, textColor]}>{Title}</Text>
-            <Text style={[styles.username, styles.words, textColor]}>@{username}</Text>
+            <Text style={[styles.itemTitle, styles.itemAndDays, textColor]}>{Title}</Text>
+            <Text style={[styles.username, textColor]}>@{username}</Text>
+            <Text style={[styles.days, styles.itemAndDays, textColor]}>2 Days</Text>
           </View>
       </TouchableOpacity>
     );
@@ -75,17 +78,13 @@ export default rentIn
 const styles = StyleSheet.create({
   box:{
     width: '100%',
-    height: 110,
-    borderWidth: 5,
-    borderColor: 'grey',
+    height: 120,
+    borderBottomWidth: 2,
+    borderColor: 'green',
     alignItems: 'flex-start',
-    marginBottom: 40,
     flexDirection: 'row',
-    padding: 5,
-
   },
   details: {
-    paddingBottom: 100,
   },
   lightColor: { backgroundColor: "#fff" },
   darkColor: { backgroundColor: "black" },
@@ -107,17 +106,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20
   },
-  words: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
+  itemAndDays: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
   },
   image: {
     resizeMode: 'contain',
-    width: 100,
-    height: 100,
-
+    width: '20%',
+    height: '100%',
+    paddingBottom: 5,
+    marginTop: 2,
   },
+  days: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 5,
+  }, 
   container: {
     alignItems: "center",
   },
