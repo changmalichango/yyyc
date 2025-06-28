@@ -1,7 +1,9 @@
+import { getUid } from "@/assets/functions";
+import { supabase } from "@/authen/supabase";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -16,7 +18,61 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function ChatroomScreen() {
   const { chatId, otherUserUid, image, username } = useLocalSearchParams();
   const router = useRouter();
-  console.log(chatId, otherUserUid, image, username);
+
+  const [chatHistory, setChatHistroy] = useState<any[]>([]);
+
+  const LoadMessage = async () => {
+    const { data: prevMessages, error: error2 } = await supabase
+      .from("messages")
+      .select("*")
+      .eq("chat_id", chatId)
+      .order("created_at", { ascending: true });
+
+    setChatHistroy(prevMessages ?? []);
+    console.log(prevMessages);
+  };
+
+  useEffect(() => {
+    LoadMessage();
+  }, [chatId]);
+
+  const [text, setText] = useState("");
+
+  const uploadMessage = async () => {
+    const senderUid = await getUid();
+
+    const { data: messages, error: error1 } = await supabase
+      .from("messages")
+      .insert({ chat_id: chatId, sender_id: senderUid, messages: text });
+    if (error1) {
+      console.log(error1.message);
+    } else {
+      setText("");
+      LoadMessage();
+    }
+  };
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("chat")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `chat_id=eq.${chatId}`,
+        },
+        (payload) => {
+          setChatHistroy((prev) => [...prev, payload.new]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chatId]);
 
   return (
     <SafeAreaView>
@@ -50,13 +106,32 @@ export default function ChatroomScreen() {
 
       <ScrollView style={{ height: "85%" }}>
         <View>
-          <Text>hhh</Text>
+          {chatHistory.map((message) => (
+            <View
+              key={message.id}
+              style={[
+                message.sender_id === otherUserUid
+                  ? styles.otherChatStyle
+                  : styles.myChatStyle,
+                styles.messageBox,
+              ]}
+            >
+              <Text>{message.messages}</Text>
+            </View>
+          ))}
         </View>
       </ScrollView>
 
       <View style={styles.chatbar}>
-        <TextInput placeholder="text" style={{ width: "85%" }} />
-        <Feather name="arrow-up" size={24} color="black" />
+        <TextInput
+          placeholder="text"
+          style={{ width: "85%" }}
+          onChangeText={setText}
+          value={text}
+        />
+        <TouchableOpacity onPress={uploadMessage}>
+          <Feather name="arrow-up" size={24} color="black" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -79,4 +154,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   chatbar: { flexDirection: "row" },
+  otherChatStyle: { alignSelf: "flex-start", backgroundColor: "green" },
+  myChatStyle: { alignSelf: "flex-end", backgroundColor: "blue" },
+  messageBox: {
+    maxWidth: "70%",
+    padding: 10,
+    marginVertical: 4,
+    borderRadius: 7,
+    marginHorizontal: 10,
+  },
 });

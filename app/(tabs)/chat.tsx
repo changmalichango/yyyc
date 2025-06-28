@@ -61,12 +61,12 @@ export default function ChatScreen() {
           };
         })
       );
-      console.log(chatInfo);
+      // console.log(chatInfo);
       setListing(chatInfo);
     };
 
     getList();
-    console.log("help");
+    // console.log("help");
 
     // console.log(listing);
   }, []);
@@ -132,7 +132,7 @@ export default function ChatScreen() {
           <ChatBox
             username={item.username}
             image={item.image_url}
-            chatId={item.chat_id}
+            chatId={item.chatId}
             otherUserUid={item.otherUserUid}
           />
         )}
