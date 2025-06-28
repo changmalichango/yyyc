@@ -96,7 +96,9 @@ export default function ChatroomScreen() {
         </Text>
         <Image
           source={
-            image ? { uri: image } : require("../assets/images/defaultpfp.png")
+            image
+              ? { uri: image }
+              : require("../assets/images/defaultpfp.png")
           }
           style={styles.image}
         />

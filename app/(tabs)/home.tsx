@@ -26,9 +26,27 @@ export default function ListingsScreen() {
   const [listing, setListing] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getAdjustedData = (data) => {
-  if (data.length % 2 === 1) {
-    return [...data, { isPlaceholder: true }];
+  type ListingOrPlaceholder =
+  | ListingItem
+  | { id: string; isPlaceholder: true };
+
+
+  interface ListingItem {
+  id: string;
+  item: string;
+  price: number;
+  duration: string;
+  name: string;
+  image_url: string;
+  description: string;
+  isPlaceholder?: boolean;
+}
+
+
+  const getAdjustedData = (data: ListingItem[]): ListingOrPlaceholder[] => {
+    if (!data) return [];
+    if (data.length % 2 === 1) {
+    return [...data, { id: `placeholder-${data.length}`,  isPlaceholder: true }];
   }
   return data;
 };
