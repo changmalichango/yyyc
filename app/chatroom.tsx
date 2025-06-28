@@ -75,7 +75,7 @@ export default function ChatroomScreen() {
   }, [chatId]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -96,9 +96,7 @@ export default function ChatroomScreen() {
         </Text>
         <Image
           source={
-            image
-              ? { uri: image }
-              : require("../../assets/images/defaultpfp.png")
+            image ? { uri: image } : require("../assets/images/defaultpfp.png")
           }
           style={styles.image}
         />
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
     maxWidth: "70%",
     padding: 10,
     marginVertical: 4,
-    borderRadius: 7,
+    borderRadius: 10,
     marginHorizontal: 10,
   },
 });

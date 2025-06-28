@@ -87,7 +87,7 @@ export default function ChatScreen() {
     <TouchableOpacity
       onPress={() => {
         router.push({
-          pathname: "/(tabs)/chatroom",
+          pathname: "../chatroom",
           params: {
             chatId,
             otherUserUid,
