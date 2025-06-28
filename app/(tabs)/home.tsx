@@ -26,28 +26,41 @@ export default function ListingsScreen() {
   const [listing, setListing] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
+  const getAdjustedData = (data) => {
+  if (data.length % 2 === 1) {
+    return [...data, { isPlaceholder: true }];
+  }
+  return data;
+};
+
+
   const getList = async () => {
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError) {
-      Alert.alert(userError.message);
-      return;
-    }
+  if (userError) {
+    Alert.alert(userError.message);
+    return;
+  }
 
-    const { data: list, error } = await supabase
-      .from("uploads")
-      .select("*")
-      .neq("uid", user?.id);
+  if (!user) {
+    Alert.alert("User not found.");
+    return;
+  }
 
-    if (error) {
-      Alert.alert(error.message);
-    } else {
-      setListing(list);
-    }
-  };
+  const { data: list, error } = await supabase
+    .from("uploads")
+    .select("*")
+    .neq("uid", user.id);
+
+  if (error) {
+    Alert.alert(error.message);
+  } else {
+    setListing(list);
+  }
+};
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -61,7 +74,6 @@ export default function ListingsScreen() {
 
   type Props = {
     Title: string;
-    user_uid: string;
     price: number;
     username: string;
     image_url: any;
@@ -72,7 +84,6 @@ export default function ListingsScreen() {
   const Card: React.FC<Props> = ({
     Title,
     price,
-    user_uid,
     username,
     image_url,
     rate,
@@ -82,14 +93,7 @@ export default function ListingsScreen() {
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: {
-            Title,
-            price: price.toString(),
-            image_url,
-            rate,
-            description,
-            user_uid,
-          },
+          params: { Title, price: price.toString(), image_url, rate, description, },
         })
       }
       style={[styles.itemCard, themeColor]}
@@ -99,7 +103,6 @@ export default function ListingsScreen() {
       <Text style={styles.price}>
         ${price}/{rate}
       </Text>
-
       <Text style={styles.username}>@{username}</Text>
     </TouchableOpacity>
   );
@@ -130,19 +133,21 @@ export default function ListingsScreen() {
 
       <FlatList
         contentContainerStyle={[styles.container, { paddingBottom: 150 }]}
-        data={listing}
-        renderItem={({ item }) => (
-          <Card
-            Title={item.item}
-            price={item.price}
-            rate={item.duration}
-            username={item.name}
-            image_url={item.image_url}
-            description={item.description}
-            user_uid={item.uid}
-          />
+        data={getAdjustedData(listing)}
+        renderItem={({ item }) => 
+        item.isPlaceholder ? (
+          <View style={[styles.itemCard, { opacity: 0 }]} />
+        ) : (  
+            <Card
+              Title={item.item}
+              price={item.price}
+              rate={item.duration}
+              username={item.name}
+              image_url={item.image_url}
+              description={item.description}
+            />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => item.id ? item.id.toString(): `placeholder-${index}`}
         numColumns={2}
         columnWrapperStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}
