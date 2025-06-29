@@ -1,9 +1,10 @@
-import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
-
 import { getUid } from "@/assets/functions";
 import { supabase } from "@/authen/supabase";
+import Entypo from "@expo/vector-icons/Entypo";
 import { decode } from "base64-arraybuffer";
+import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
   Alert,
   Image,
@@ -24,7 +25,7 @@ export default function ListScreen() {
   const styleColor =
     colorScheme === "dark" ? styles.darkStyle : styles.lightStyle;
   const textColor = colorScheme === "dark" ? styles.lightText : styles.darkText;
-
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [gender, setGender] = useState("");
@@ -89,6 +90,27 @@ export default function ListScreen() {
 
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
+      
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace("/me");
+          }}
+        >
+          <Entypo name="chevron-left" size={24} color="black" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            alignItems: "center",
+            marginLeft: 123,
+            fontWeight: "bold",
+            fontSize: 20,
+          }}
+        >
+          My Listings
+        </Text>
+      </View>
+      
       <ScrollView style={styles.container2}>
         <View>
           <Text style={[textColor, styles.textOnBox]}>Username</Text>
@@ -259,5 +281,12 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     justifyContent: "center",
     alignItems: "center",
+  },header: {
+    backgroundColor: "green",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: 40,
+    paddingHorizontal: 16,
   },
 });
