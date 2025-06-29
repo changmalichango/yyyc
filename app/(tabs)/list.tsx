@@ -67,7 +67,7 @@ export default function ListScreen() {
 
       const { data, error } = await supabase.storage
         .from("listing-images")
-        .createSignedUrl(fileName, 10000);
+        .createSignedUrl(fileName, 1000000);
 
       setImageUrl(data?.signedUrl ?? null);
       console.log(data?.signedUrl);
@@ -184,11 +184,11 @@ export default function ListScreen() {
                 paddingLeft: 5,
                 fontSize: 15,
                 paddingTop: 5,
-                textAlignVertical: 'top',
+                textAlignVertical: "top",
                 flexShrink: 1,
-                overflow: 'hidden',
+                overflow: "hidden",
                 includeFontPadding: false,
-                width: '100%'
+                width: "100%",
               }}
               multiline
               value={description}
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "grey",
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
     // justifyContent: "center",
   },
   imageBox: {
