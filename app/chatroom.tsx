@@ -12,13 +12,17 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ChatroomScreen() {
   const { chatId, otherUserUid, image, username } = useLocalSearchParams();
   const router = useRouter();
-
+  const colorScheme = useColorScheme();
+  const themeColor =
+    colorScheme === "dark" ? styles.darkColor : styles.lightColor;
+  
   const [chatHistory, setChatHistroy] = useState<any[]>([]);
 
   const LoadMessage = async () => {
@@ -125,12 +129,12 @@ export default function ChatroomScreen() {
       <View style={styles.chatbar}>
         <TextInput
           placeholder="text"
-          style={{ width: "85%" }}
+          style={[styles.textPlaceholder]}
           onChangeText={setText}
           value={text}
         />
         <TouchableOpacity onPress={uploadMessage}>
-          <Feather name="arrow-up" size={24} color="black" />
+          <Feather name="arrow-up" size={24} color="blue" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -163,6 +167,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
   },
+  lightColor: {
+    backgroundColor: "#fff",
+  },
+  darkColor: {
+    backgroundColor: "black",
+  },
+  textDark: {
+    color: "black",
+  },
+  textLight: {
+    color: "white",
+  },
+  textPlaceholder: {
+    marginLeft: 15,
+    width: '85%'
+  }
 });
 
 export const options = {
