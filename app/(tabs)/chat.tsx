@@ -195,17 +195,13 @@ const styles = StyleSheet.create({
 
   chatRectangle: {
     flexDirection: "row",
-    flex: 1,
-    borderLeftWidth: 0,
+    alignItems: "flex-start",
+    width: "100%",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderBottomColor: 'grey',
-    alignItems: "center",
-    width: "100%",
-    height: 20,
-    marginRight: 300,
-    paddingBottom: 30,
-    marginBottom: 30,
-    // backgroundColor: "blue",
+    backgroundColor: '#fff',
   },
 
   circlePfp: {
@@ -225,12 +221,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flexDirection: "column",
     alignSelf: "flex-start",
-    marginBottom: 5,
+    marginBottom: 45,
   },
   container: {
-    // backgroundColor: "blue",
-    padding: 16,
     paddingBottom: 60,
-    alignItems: "center",
   },
 });
