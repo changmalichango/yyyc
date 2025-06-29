@@ -266,7 +266,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 20,
     marginRight: 170,
-
     width: 130,
   },
   icons: {
