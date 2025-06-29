@@ -107,7 +107,7 @@ export default function ListScreen() {
             fontSize: 20,
           }}
         >
-          My Listings
+          Edit Profile
         </Text>
       </View>
       

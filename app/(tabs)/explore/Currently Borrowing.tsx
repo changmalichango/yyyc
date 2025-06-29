@@ -26,7 +26,7 @@ const rentIn = () => {
     image: any;
   };
   const items = [
-    { id: "1", username: 'yyyc', Title: 'gay', image: require("../../../assets/images/guitar.png") },
+    { id: "1", username: 'yyyc', Title: 'keyboard', image: require("../../../assets/images/guitar.png") },
 
 
   ];

@@ -26,9 +26,9 @@ const rentIn = () => {
     image: any;
   };
   const items = [
-    { id: "1", username: 'yyyc', Title: 'gay', image: require("../../../assets/images/guitar.png") },
-    { id: "2", username: 'yyyc', Title: 'gf', image: require("../../../assets/images/beatrice.png") },
-    { id: "3", username: 'yyyc', Title: 'bf', image: require("../../../assets/images/sky.png") },
+    { id: "1", username: 'yyyc', Title: 'ipad', image: require("../../../assets/images/guitar.png") },
+    { id: "2", username: 'yyyc', Title: 'pc', image: require("../../../assets/images/beatrice.png") },
+    { id: "3", username: 'yyyc', Title: 'speaker', image: require("../../../assets/images/sky.png") },
   ];
   
     const Box: React.FC<Props> = ({

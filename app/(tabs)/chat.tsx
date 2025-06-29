@@ -97,7 +97,7 @@ export default function ChatScreen() {
         });
       }}
     >
-      <View style={[styles.chatRectangle]}>
+      <View style={[styles.chatRectangle, themeColor]}>
         <Image
           source={
             image
@@ -107,7 +107,7 @@ export default function ChatScreen() {
           style={styles.circlePfp}
         />
         <View>
-          <Text style={styles.chatUsername}>{username}</Text>
+          <Text style={[styles.chatUsername, textColor]}>{username}</Text>
         </View>
       </View>
     </TouchableOpacity>
