@@ -26,31 +26,30 @@ export default function ListingsScreen() {
   const [listing, setListing] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  type ListingOrPlaceholder =
-  | ListingItem
-  | { id: string; isPlaceholder: true };
-
+  type ListingOrPlaceholder = ListingItem | { id: string; isPlaceholder: true };
 
   interface ListingItem {
-  id: string;
-  item: string;
-  price: number;
-  duration: string;
-  name: string;
-  image_url: string;
-  description: string;
-  isPlaceholder?: boolean;
-}
-
+    id: string;
+    item: string;
+    price: number;
+    uid: string;
+    duration: string;
+    name: string;
+    image_url: string;
+    description: string;
+    isPlaceholder?: boolean;
+  }
 
   const getAdjustedData = (data: ListingItem[]): ListingOrPlaceholder[] => {
     if (!data) return [];
     if (data.length % 2 === 1) {
-    return [...data, { id: `placeholder-${data.length}`,  isPlaceholder: true }];
-  }
-  return data;
-};
-
+      return [
+        ...data,
+        { id: `placeholder-${data.length}`, isPlaceholder: true },
+      ];
+    }
+    return data;
+  };
 
   const getList = async () => {
     const {
@@ -58,27 +57,27 @@ export default function ListingsScreen() {
       error: userError,
     } = await supabase.auth.getUser();
 
-  if (userError) {
-    Alert.alert(userError.message);
-    return;
-  }
+    if (userError) {
+      Alert.alert(userError.message);
+      return;
+    }
 
-  if (!user) {
-    Alert.alert("User not found.");
-    return;
-  }
+    if (!user) {
+      Alert.alert("User not found.");
+      return;
+    }
 
-  const { data: list, error } = await supabase
-    .from("uploads")
-    .select("*")
-    .neq("uid", user.id);
+    const { data: list, error } = await supabase
+      .from("uploads")
+      .select("*")
+      .neq("uid", user.id);
 
-  if (error) {
-    Alert.alert(error.message);
-  } else {
-    setListing(list);
-  }
-};
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      setListing(list);
+    }
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -97,6 +96,7 @@ export default function ListingsScreen() {
     image_url: any;
     rate: string;
     description: string;
+    user_uid: string;
   };
 
   const Card: React.FC<Props> = ({
@@ -106,12 +106,20 @@ export default function ListingsScreen() {
     image_url,
     rate,
     description,
+    user_uid,
   }) => (
     <TouchableOpacity
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: { Title, price: price.toString(), image_url, rate, description, },
+          params: {
+            Title,
+            price: price.toString(),
+            image_url,
+            rate,
+            description,
+            user_uid,
+          },
         })
       }
       style={[styles.itemCard, themeColor]}
@@ -152,10 +160,10 @@ export default function ListingsScreen() {
       <FlatList
         contentContainerStyle={[styles.container, { paddingBottom: 150 }]}
         data={getAdjustedData(listing)}
-        renderItem={({ item }) => 
-        item.isPlaceholder ? (
-          <View style={[styles.itemCard, { opacity: 0 }]} />
-        ) : (  
+        renderItem={({ item }) =>
+          item.isPlaceholder ? (
+            <View style={[styles.itemCard, { opacity: 0 }]} />
+          ) : (
             <Card
               Title={item.item}
               price={item.price}
@@ -163,9 +171,13 @@ export default function ListingsScreen() {
               username={item.name}
               image_url={item.image_url}
               description={item.description}
+              user_uid={item.uid}
             />
-        )}
-        keyExtractor={(item, index) => item.id ? item.id.toString(): `placeholder-${index}`}
+          )
+        }
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : `placeholder-${index}`
+        }
         numColumns={2}
         columnWrapperStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}

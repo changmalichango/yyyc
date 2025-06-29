@@ -82,6 +82,7 @@ export default function ItemDetailsScreen() {
   const { Title, price, image_url, rate, description, user_uid } =
     useLocalSearchParams();
 
+  console.log(user_uid);
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -99,7 +100,6 @@ export default function ItemDetailsScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
-      
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -119,7 +119,7 @@ export default function ItemDetailsScreen() {
           My Listings
         </Text>
       </View>
-      
+
       <ScrollView style={styles.container}>
         <Image source={{ uri: image_url as string }} style={styles.image} />
         <Text style={[styles.title, textColor]}>{Title}</Text>
