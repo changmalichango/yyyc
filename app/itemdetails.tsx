@@ -37,7 +37,7 @@ export default function ItemDetailsScreen() {
   const { Title, price, image_url, rate, description, user_uid, id } =
     useLocalSearchParams();
 
-  console.log(user_uid);
+  // console.log(user_uid);
   useEffect(() => {
     const loadInitial = async () => {
       const uid = await getUid();
@@ -53,9 +53,14 @@ export default function ItemDetailsScreen() {
         .eq("item_id", id)
         .single();
 
+      console.log(uid);
+      console.log(id);
+      console.log(data);
       if (!error && data) {
+        console.log("fav");
         setLiked(true);
       } else {
+        console.log("not fav");
         setLiked(false);
       }
     };
