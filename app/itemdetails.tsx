@@ -34,15 +34,8 @@ export default function ItemDetailsScreen() {
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const [userId, setUserId] = useState<string | null>(null);
-  const {
-    Title,
-    price,
-    image_url,
-    rate,
-    description,
-    user_uid,
-    singleListing,
-  } = useLocalSearchParams();
+  const { Title, price, image_url, rate, description, user_uid, id } =
+    useLocalSearchParams();
 
   console.log(user_uid);
   useEffect(() => {
@@ -50,14 +43,14 @@ export default function ItemDetailsScreen() {
       const uid = await getUid();
       setUserId(uid);
 
-      if (!uid || !singleListing) return;
+      if (!uid || !id) return;
 
       // Check if favourited
       const { data, error } = await supabase
         .from("favourites")
         .select("id")
         .eq("user_uid", uid)
-        .eq("item_id", singleListing)
+        .eq("item_id", id)
         .single();
 
       if (!error && data) {
@@ -68,13 +61,19 @@ export default function ItemDetailsScreen() {
     };
 
     loadInitial();
-  }, [singleListing]);
+  }, [id]);
 
   const onPress = async () => {
     console.log("❤️ Heart pressed!");
+    console.log(id);
+    // console.log("❤️ Heart pressed!");
+
     const uid = await getUid();
 
-    if (!uid || !singleListing) return;
+    if (!uid || !id) {
+      console.log("here");
+      return;
+    }
 
     if (liked) {
       // Remove from favourites
@@ -82,7 +81,7 @@ export default function ItemDetailsScreen() {
         .from("favourites")
         .delete()
         .eq("user_uid", uid)
-        .eq("item_id", singleListing);
+        .eq("item_id", id);
 
       if (error) {
         console.error("❌ Delete error:", error);
@@ -96,7 +95,7 @@ export default function ItemDetailsScreen() {
       // Add to favourites
       const { data, error } = await supabase
         .from("favourites")
-        .insert([{ user_uid: uid, item_id: singleListing }]);
+        .insert([{ user_uid: uid, item_id: id }]);
 
       if (error) {
         console.error("❌ Insert error:", error);

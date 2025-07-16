@@ -1,5 +1,5 @@
 import { supabase } from "@/authen/supabase";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -26,54 +26,53 @@ export default function ListingsScreen() {
 
   const [listing, setListing] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
   const handleClearSearch = () => {
-    setSearchText('');
+    setSearchText("");
     getList();
-  }
+  };
 
-  
   const handleSearch = async () => {
-  if (!searchText.trim()) {
-    await getList();
-    return;
-  }
+    if (!searchText.trim()) {
+      await getList();
+      return;
+    }
 
-  setRefreshing(true);
+    setRefreshing(true);
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-  if (userError) {
-    Alert.alert(userError.message);
+    if (userError) {
+      Alert.alert(userError.message);
+      setRefreshing(false);
+      return;
+    }
+
+    if (!user) {
+      Alert.alert("User not found.");
+      setRefreshing(false);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("uploads")
+      .select("*")
+      .neq("uid", user.id)
+      .ilike("item", `%${searchText}%`);
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      setListing(data);
+    }
+
     setRefreshing(false);
-    return;
-  }
+  };
 
-  if (!user) {
-    Alert.alert("User not found.");
-    setRefreshing(false);
-    return;
-  }
-
-  const { data, error } = await supabase
-    .from('uploads')
-    .select('*')
-    .neq('uid', user.id)
-    .ilike('item', `%${searchText}%`);
-
-  if (error) {
-    Alert.alert(error.message);
-  } else {
-    setListing(data);
-  }
-
-  setRefreshing(false);
-};
-  
   type ListingOrPlaceholder = ListingItem | { id: string; isPlaceholder: true };
 
   interface ListingItem {
@@ -85,6 +84,7 @@ export default function ListingsScreen() {
     name: string;
     image_url: string;
     description: string;
+
     isPlaceholder?: boolean;
   }
 
@@ -136,7 +136,7 @@ export default function ListingsScreen() {
   useEffect(() => {
     getList();
   }, []);
-  
+
   type Props = {
     Title: string;
     price: number;
@@ -169,7 +169,7 @@ export default function ListingsScreen() {
             rate,
             description,
             user_uid,
-            id
+            id,
           },
         })
       }
@@ -200,17 +200,20 @@ export default function ListingsScreen() {
         {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
         <View style={styles.search}>
           <FontAwesome name="search" size={24} style={styles.searchIcon} />
-            <TextInput 
-              placeholder="Search"
-              style={{ flex: 3.0, paddingVertical: 0, paddingHorizontal: 7 }}
-              value={searchText}
-              onChangeText={setSearchText}
-            />
+          <TextInput
+            placeholder="Search"
+            style={{ flex: 3.0, paddingVertical: 0, paddingHorizontal: 7 }}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
           {searchText.length > 0 && (
-            <TouchableOpacity onPress={handleClearSearch} style={styles.clearButton}>
+            <TouchableOpacity
+              onPress={handleClearSearch}
+              style={styles.clearButton}
+            >
               <AntDesign name="closecircleo" size={20} />
             </TouchableOpacity>
-  )}
+          )}
           <TouchableOpacity onPress={handleSearch} style={styles.searchBtn}>
             <Text style={styles.btnText}>Go!</Text>
           </TouchableOpacity>
@@ -268,8 +271,8 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     paddingHorizontal: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   titleRow: {
     flexDirection: "row",
