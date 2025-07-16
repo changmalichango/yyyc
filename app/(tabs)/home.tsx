@@ -1,4 +1,5 @@
 import { supabase } from "@/authen/supabase";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -25,7 +26,54 @@ export default function ListingsScreen() {
 
   const [listing, setListing] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
+  const handleClearSearch = () => {
+    setSearchText('');
+    getList();
+  }
+
+  
+  const handleSearch = async () => {
+  if (!searchText.trim()) {
+    await getList();
+    return;
+  }
+
+  setRefreshing(true);
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    Alert.alert(userError.message);
+    setRefreshing(false);
+    return;
+  }
+
+  if (!user) {
+    Alert.alert("User not found.");
+    setRefreshing(false);
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('uploads')
+    .select('*')
+    .neq('uid', user.id)
+    .ilike('item', `%${searchText}%`);
+
+  if (error) {
+    Alert.alert(error.message);
+  } else {
+    setListing(data);
+  }
+
+  setRefreshing(false);
+};
+  
   type ListingOrPlaceholder = ListingItem | { id: string; isPlaceholder: true };
 
   interface ListingItem {
@@ -88,7 +136,7 @@ export default function ListingsScreen() {
   useEffect(() => {
     getList();
   }, []);
-
+  
   type Props = {
     Title: string;
     price: number;
@@ -97,6 +145,7 @@ export default function ListingsScreen() {
     rate: string;
     description: string;
     user_uid: string;
+    id: string;
   };
 
   const Card: React.FC<Props> = ({
@@ -107,6 +156,7 @@ export default function ListingsScreen() {
     rate,
     description,
     user_uid,
+    id,
   }) => (
     <TouchableOpacity
       onPress={() =>
@@ -119,6 +169,7 @@ export default function ListingsScreen() {
             rate,
             description,
             user_uid,
+            id
           },
         })
       }
@@ -149,8 +200,18 @@ export default function ListingsScreen() {
         {/* THIS IS THE SEARCHING BAR!!!!!!!!!!!! */}
         <View style={styles.search}>
           <FontAwesome name="search" size={24} style={styles.searchIcon} />
-          <TextInput placeholder="Search" style={{ width: "75%" }} />
-          <TouchableOpacity style={styles.searchBtn}>
+            <TextInput 
+              placeholder="Search"
+              style={{ flex: 3.0, paddingVertical: 0, paddingHorizontal: 7 }}
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+          {searchText.length > 0 && (
+            <TouchableOpacity onPress={handleClearSearch} style={styles.clearButton}>
+              <AntDesign name="closecircleo" size={20} />
+            </TouchableOpacity>
+  )}
+          <TouchableOpacity onPress={handleSearch} style={styles.searchBtn}>
             <Text style={styles.btnText}>Go!</Text>
           </TouchableOpacity>
         </View>
@@ -172,6 +233,7 @@ export default function ListingsScreen() {
               image_url={item.image_url}
               description={item.description}
               user_uid={item.uid}
+              id={item.id}
             />
           )
         }
@@ -203,6 +265,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 12,
     rowGap: 24,
+  },
+  clearButton: {
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   titleRow: {
     flexDirection: "row",

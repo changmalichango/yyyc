@@ -3,7 +3,7 @@ import { supabase } from "@/authen/supabase";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -33,10 +33,83 @@ export default function ItemDetailsScreen() {
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
+  const [userId, setUserId] = useState<string | null>(null);
+  const { Title, price, image_url, rate, description, userUid, singleListing } =
+    useLocalSearchParams();
+  
+  useEffect(() => {
+  const loadInitial = async () => {
+    const uid = await getUid();
+    setUserId(uid);
+
+    if (!uid || !singleListing) return;
+
+    // Check if favourited
+    const { data, error } = await supabase
+      .from('favourites')
+      .select('id')
+      .eq('user_uid', uid)
+      .eq('item_id', singleListing)
+      .single();
+
+    if (!error && data) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  };
+
+  loadInitial();
+}, [singleListing]);
+
+const onPress = async () => {
+  console.log("❤️ Heart pressed!");
+  const uid = await getUid();
+
+  if (!uid || !singleListing) return;
+
+  if (liked) {
+    // Remove from favourites
+    const { error } = await supabase
+    .from('favourites')
+    .delete()
+    .eq('user_uid', uid)
+    .eq('item_id', singleListing);
+
+  if (error) {
+  console.error('❌ Delete error:', error);
+  Alert.alert('Error removing favourite', error.message);
+  return;
+  }
+
+  setLiked(false);
+  console.log("❤️ liked state before:", liked);
+  } else {
+    // Add to favourites
+    const { data, error } = await supabase
+    .from('favourites')
+    .insert([{ user_uid: uid, item_id: singleListing }]);
+
+  if (error) {
+  console.error('❌ Insert error:', error);
+  Alert.alert('Error adding to favourites', error.message);
+  return;
+  } 
+
+  setLiked(true);
+  console.log("❤️ liked state after:", liked);
+  }
+
+  // Animate
+  scale.value = withSpring(1.3, {}, () => {
+    scale.value = withSpring(1);
+  });
+};
 
   const CheckChat = async () => {
-    const seller_uid = user_uid;
+    const seller_uid = userUid;
     const buyer_uid = await getUid();
+
 
     // CHECKING IF THE CHAT EXISTS
     // ///////////////////////////////////////////////////////
@@ -79,10 +152,7 @@ export default function ItemDetailsScreen() {
       }
     }
   };
-  const { Title, price, image_url, rate, description, user_uid } =
-    useLocalSearchParams();
 
-  console.log(user_uid);
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -90,13 +160,6 @@ export default function ItemDetailsScreen() {
       transform: [{ scale: scale.value }],
     };
   });
-
-  const onPress = () => {
-    setLiked((prev) => !prev);
-    scale.value = withSpring(1.3, {}, () => {
-      scale.value = withSpring(1);
-    });
-  };
 
   return (
     <SafeAreaView style={[styles.safe, themeColor]}>
@@ -282,3 +345,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
+console.log('userId')

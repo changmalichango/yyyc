@@ -134,8 +134,10 @@ USER NAME AND EMAIL */}
         {/* 
         FAV 
         ////////////////////////////////////////////////////////////////////////// */}
-        <TouchableOpacity>
-          <View style={styles.functionBox}>
+        <TouchableOpacity onPress={() =>
+          router.push({
+            pathname: "/favourites", })}>
+         <View style={styles.functionBox}>
             <Feather name="heart" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Favourites</Text>
             <Feather
