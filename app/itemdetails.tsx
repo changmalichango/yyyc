@@ -34,82 +34,89 @@ export default function ItemDetailsScreen() {
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const [userId, setUserId] = useState<string | null>(null);
-  const { Title, price, image_url, rate, description, userUid, singleListing } =
-    useLocalSearchParams();
-  
+  const {
+    Title,
+    price,
+    image_url,
+    rate,
+    description,
+    user_uid,
+    singleListing,
+  } = useLocalSearchParams();
+
+  console.log(user_uid);
   useEffect(() => {
-  const loadInitial = async () => {
+    const loadInitial = async () => {
+      const uid = await getUid();
+      setUserId(uid);
+
+      if (!uid || !singleListing) return;
+
+      // Check if favourited
+      const { data, error } = await supabase
+        .from("favourites")
+        .select("id")
+        .eq("user_uid", uid)
+        .eq("item_id", singleListing)
+        .single();
+
+      if (!error && data) {
+        setLiked(true);
+      } else {
+        setLiked(false);
+      }
+    };
+
+    loadInitial();
+  }, [singleListing]);
+
+  const onPress = async () => {
+    console.log("❤️ Heart pressed!");
     const uid = await getUid();
-    setUserId(uid);
 
     if (!uid || !singleListing) return;
 
-    // Check if favourited
-    const { data, error } = await supabase
-      .from('favourites')
-      .select('id')
-      .eq('user_uid', uid)
-      .eq('item_id', singleListing)
-      .single();
+    if (liked) {
+      // Remove from favourites
+      const { error } = await supabase
+        .from("favourites")
+        .delete()
+        .eq("user_uid", uid)
+        .eq("item_id", singleListing);
 
-    if (!error && data) {
-      setLiked(true);
-    } else {
+      if (error) {
+        console.error("❌ Delete error:", error);
+        Alert.alert("Error removing favourite", error.message);
+        return;
+      }
+
       setLiked(false);
+      console.log("❤️ liked state before:", liked);
+    } else {
+      // Add to favourites
+      const { data, error } = await supabase
+        .from("favourites")
+        .insert([{ user_uid: uid, item_id: singleListing }]);
+
+      if (error) {
+        console.error("❌ Insert error:", error);
+        Alert.alert("Error adding to favourites", error.message);
+        return;
+      }
+
+      setLiked(true);
+      console.log("❤️ liked state after:", liked);
     }
+
+    // Animate
+    scale.value = withSpring(1.3, {}, () => {
+      scale.value = withSpring(1);
+    });
   };
 
-  loadInitial();
-}, [singleListing]);
-
-const onPress = async () => {
-  console.log("❤️ Heart pressed!");
-  const uid = await getUid();
-
-  if (!uid || !singleListing) return;
-
-  if (liked) {
-    // Remove from favourites
-    const { error } = await supabase
-    .from('favourites')
-    .delete()
-    .eq('user_uid', uid)
-    .eq('item_id', singleListing);
-
-  if (error) {
-  console.error('❌ Delete error:', error);
-  Alert.alert('Error removing favourite', error.message);
-  return;
-  }
-
-  setLiked(false);
-  console.log("❤️ liked state before:", liked);
-  } else {
-    // Add to favourites
-    const { data, error } = await supabase
-    .from('favourites')
-    .insert([{ user_uid: uid, item_id: singleListing }]);
-
-  if (error) {
-  console.error('❌ Insert error:', error);
-  Alert.alert('Error adding to favourites', error.message);
-  return;
-  } 
-
-  setLiked(true);
-  console.log("❤️ liked state after:", liked);
-  }
-
-  // Animate
-  scale.value = withSpring(1.3, {}, () => {
-    scale.value = withSpring(1);
-  });
-};
-
   const CheckChat = async () => {
-    const seller_uid = userUid;
+    const seller_uid = user_uid;
     const buyer_uid = await getUid();
-
 
     // CHECKING IF THE CHAT EXISTS
     // ///////////////////////////////////////////////////////
@@ -346,4 +353,4 @@ const styles = StyleSheet.create({
   },
 });
 
-console.log('userId')
+console.log("userId");
