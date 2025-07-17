@@ -109,7 +109,7 @@ export default function ListingsScreen() {
     <TouchableOpacity
       onPress={() =>
         router.push({
-          pathname: "/itemdetails",
+          pathname: "/myitemdetails",
           params: { Title, price: price.toString(), image_url, rate, description, },
         })
       }

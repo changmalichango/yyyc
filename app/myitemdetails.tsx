@@ -1,26 +1,24 @@
 import { getUid } from "@/assets/functions";
 import { supabase } from "@/authen/supabase";
 import Entypo from "@expo/vector-icons/Entypo";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
-  Image,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
+    Alert,
+    Image,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    View
 } from "react-native";
 import { Calendar } from "react-native-calendars";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
+import {
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
 } from "react-native-reanimated";
 
 export const options = {
@@ -70,7 +68,7 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
   return range;
 };
 
-  // console.log(user_uid);
+  console.log(user_uid);
   useEffect(() => {
     const loadInitial = async () => {
       const uid = await getUid();
@@ -86,14 +84,9 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
         .eq("item_id", id)
         .single();
 
-      console.log(uid);
-      console.log(id);
-      console.log(data);
       if (!error && data) {
-        console.log("fav");
         setLiked(true);
       } else {
-        console.log("not fav");
         setLiked(false);
       }
     };
@@ -151,51 +144,7 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
     });
   };
 
-  const CheckChat = async () => {
-    const seller_uid = user_uid;
-    const buyer_uid = await getUid();
-
-    // CHECKING IF THE CHAT EXISTS
-    // ///////////////////////////////////////////////////////
-
-    if (buyer_uid === seller_uid) {
-      Alert.alert("You cannot chat with yourself!");
-    } else {
-      const { data: existence, error: error1 } = await supabase
-        .from("chats")
-        .select("*")
-        .or(
-          `and(user_1.eq.${seller_uid},user_2.eq.${buyer_uid}),and(user_2.eq.${seller_uid},user_1.eq.${buyer_uid})`
-        )
-        .maybeSingle();
-
-      if (error1) {
-        Alert.alert(error1.message);
-      } else {
-        // INSERT IF NOT EXISTENT
-        // ///////////////////////////////////////////
-
-        if (!existence) {
-          const { data: table, error: error2 } = await supabase
-            .from("chats")
-            .insert({
-              user_1: buyer_uid,
-              user_2: seller_uid,
-            })
-            .select()
-            .single();
-
-          if (error2) Alert.alert(error2.message);
-          else console.log("created new chat");
-          console.log(table.id);
-        } else {
-          console.log("chat existed");
-
-          console.log(existence.id);
-        }
-      }
-    }
-  };
+  
 
   const scale = useSharedValue(1);
 
@@ -280,74 +229,64 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
       alignItems: 'center',
     }}
     onPress={async () => {
-      if (!startDate || !endDate) {
-        Alert.alert('Please select a start and end date first!');
-        return;
-      }
+  console.log('✅ Edit Available Dates button pressed');
 
-      const uid = await getUid();
+  if (!startDate || !endDate) {
+    Alert.alert('Please select a start and end date first!');
+    return;
+  }
 
-      if (!uid || !id) {
-        Alert.alert('Error: missing user or item ID');
-        return;
-      }
+  const uid = await getUid();
 
-      const { error } = await supabase
-        .from('rentalRequest')
-        .insert([
-          {
-            item_id: id,
-            start_date: startDate,
-            end_date: endDate,
-            renter_uid: await getUid(),
-            owner_uid: user_uid,
-            status: 'pending',
-          }
-        ]);
+  if (!uid || !id) {
+    Alert.alert('Error: missing user or item ID');
+    return;
+  }
 
-      if (error) {
-        console.log("❌ Supabase error:", error);
-        Alert.alert('Error saving dates', error.message);
-      } else {
-        Alert.alert('Dates saved successfully!');
-        setStartDate(null);
-        setEndDate(null);
-        setSelectedRange({});
-      }
-    }}
+
+    // 1️⃣ DELETE all existing blocked dates for this item
+    const { error: deleteError } = await supabase
+      .from('blockedOutDates')
+      .delete()
+      .eq('item_id', id);
+
+    if (deleteError) {
+      console.log('❌ Delete error:', deleteError);
+      Alert.alert('Error clearing existing dates', deleteError.message);
+      return;
+    }
+
+    console.log('✅ Inserting new blocked date:', startDate, endDate);
+
+    // 2️⃣ INSERT new blocked date
+    const { error: insertError } = await supabase
+      .from('blockedOutDates')
+      .insert([
+        {
+          item_id: id,
+          owner_uid: uid,
+          start_date: startDate,
+          end_date: endDate,
+        }
+      ]);
+
+    if (insertError) {
+      console.log('❌ Insert error:', insertError);
+      Alert.alert('Error saving new dates', insertError.message);
+    } else {
+      console.log('✅ Dates updated successfully!');
+      Alert.alert('Dates updated successfully!');
+      setStartDate(null);
+      setEndDate(null);
+      setSelectedRange({});
+  }
+}}
+
   >
-    <Text style={{ color: 'white', fontWeight: 'bold' }}>Send Booking Request</Text>
-  </TouchableOpacity>
-</View>
-      </ScrollView>
-
-      <View style={[styles.bottomSection]}>
-        <View>
-          <Pressable onPress={onPress}>
-            <Animated.View style={[styles.heartWrapper, animatedStyle]}>
-              <FontAwesome
-                name="heart"
-                size={30}
-                color={liked ? "red" : "white"}
-              />
-            </Animated.View>
-          </Pressable>
+    <Text style={{ color: 'white', fontWeight: 'bold' }}>Edit Dates Available</Text>
+    </TouchableOpacity>
         </View>
-        <View style={styles.chatBox}>
-          <Image
-            source={require("../assets/images/chatIcon.webp")}
-            style={styles.chatIconImage}
-          />
-          <TouchableOpacity
-            style={styles.chatText}
-            onPress={async () => {
-              await CheckChat(), router.replace("/(tabs)/chat");
-            }}
-          >
-            <Text style={styles.chatText}>Chat</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
     </SafeAreaView>
   );
 }
