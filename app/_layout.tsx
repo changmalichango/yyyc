@@ -35,7 +35,8 @@ export default function RootLayout() {
             <Stack.Screen name="+not-found" />
             <Stack.Screen name="edit profile" options={{ headerShown: false }} />
             <Stack.Screen name="favourites" options={{ headerShown: false }} />
-            
+            <Stack.Screen name="myitemdetails" options={{ headerShown: false }}/>
+             
           </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
