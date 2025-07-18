@@ -25,7 +25,7 @@ export default function PendingRequests() {
   const fetchRequests = async () => {
     setLoading(true);
     const uid = await getUid();
-    console.log("My UID:", uid);
+    //console.log("My UID:", uid);
     if (!uid) return;
 
     const { data, error } = await supabase
@@ -34,7 +34,7 @@ export default function PendingRequests() {
       .eq("owner_uid", uid)
       .eq("status", "pending");
 
-      console.log("Raw rentalRequest data:", data);
+    //console.log("Raw rentalRequest data:", data);
     if (error) {
       Alert.alert("Error fetching requests", error.message);
     } else {
@@ -42,9 +42,56 @@ export default function PendingRequests() {
     }
 
     setLoading(false);
-    console.log("Supabase result:", data);
+    //console.log("Supabase result:", data);
 
   };
+
+  const updateStatus = async (id: number, newStatus: "accepted" | "rejected") => {
+  const { error } = await supabase
+    .from("rentalRequest")
+    .update({ status: newStatus })
+    .eq("id", id);
+
+  if (error) {
+    Alert.alert("Error", error.message);
+    return;
+  }
+
+  if (newStatus === "accepted") {
+    const { data, error: fetchError } = await supabase
+      .from("rentalRequest")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !data) {
+      Alert.alert("Error fetching request data", fetchError?.message || "No data");
+      return;
+    }
+
+    const { item_id, start_date, end_date, renter_uid, owner_uid } = data;
+
+    const { error: insertError } = await supabase
+      .from("blockedOutDates")
+      .insert([
+        {
+          item_id,
+          start_date,
+          end_date,
+          renter_uid,
+          owner_uid
+        },
+      ]);
+
+    if (insertError) {
+      Alert.alert("Error blocking out dates", insertError.message);
+      return;
+    }
+  }
+
+  setRequests((prev) => prev.filter((item) => item.id !== id));
+  Alert.alert(`Request ${newStatus}`);
+};
 
 
 
@@ -79,11 +126,13 @@ export default function PendingRequests() {
       <View style={styles.buttonRow}>
         <TouchableOpacity
           style={[styles.button, styles.accept]}
+          onPress={() => updateStatus(request_id, "accepted")}
         >
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.reject]}
+          onPress={() => updateStatus(request_id, "rejected")}
         >
           <Text style={styles.buttonText}>Reject</Text>
         </TouchableOpacity>
