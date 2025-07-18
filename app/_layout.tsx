@@ -36,6 +36,7 @@ export default function RootLayout() {
             <Stack.Screen name="edit profile" options={{ headerShown: false }} />
             <Stack.Screen name="favourites" options={{ headerShown: false }} />
             <Stack.Screen name="myitemdetails" options={{ headerShown: false }}/>
+            <Stack.Screen name="pendingRequests" options={{ headerShown: false }}/>
              
           </Stack>
         <StatusBar style="auto" />

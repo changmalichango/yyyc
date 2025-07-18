@@ -86,14 +86,14 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
         .eq("item_id", id)
         .single();
 
-      console.log(uid);
-      console.log(id);
-      console.log(data);
+      //console.log(uid);
+      //console.log(id);
+      //console.log(data);
       if (!error && data) {
-        console.log("fav");
+        //console.log("fav");
         setLiked(true);
       } else {
-        console.log("not fav");
+        //console.log("not fav");
         setLiked(false);
       }
     };
@@ -102,14 +102,14 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
   }, [id]);
 
   const onPress = async () => {
-    console.log("❤️ Heart pressed!");
-    console.log(id);
+    //console.log("❤️ Heart pressed!");
+    //console.log(id);
     // console.log("❤️ Heart pressed!");
 
     const uid = await getUid();
 
     if (!uid || !id) {
-      console.log("here");
+      //console.log("here");
       return;
     }
 
@@ -128,7 +128,7 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
       }
 
       setLiked(false);
-      console.log("❤️ liked state before:", liked);
+      //console.log("❤️ liked state before:", liked);
     } else {
       // Add to favourites
       const { data, error } = await supabase
@@ -142,7 +142,7 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
       }
 
       setLiked(true);
-      console.log("❤️ liked state after:", liked);
+      //console.log("❤️ liked state after:", liked);
     }
 
     // Animate
@@ -186,12 +186,12 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
             .single();
 
           if (error2) Alert.alert(error2.message);
-          else console.log("created new chat");
+          else //console.log("created new chat");
           console.log(table.id);
         } else {
-          console.log("chat existed");
+          //console.log("chat existed");
 
-          console.log(existence.id);
+          //console.log(existence.id);
         }
       }
     }
@@ -218,12 +218,13 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
         <Text
           style={{
             alignItems: "center",
-            marginLeft: 123,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             fontWeight: "bold",
             fontSize: 20,
           }}
         >
-          My Listings
+          {Title}
         </Text>
       </View>
 
@@ -309,7 +310,7 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
         console.log("❌ Supabase error:", error);
         Alert.alert('Error saving dates', error.message);
       } else {
-        Alert.alert('Dates saved successfully!');
+        Alert.alert('Request Sent!');
         setStartDate(null);
         setEndDate(null);
         setSelectedRange({});
@@ -447,14 +448,14 @@ const styles = StyleSheet.create({
   chatText: {
     fontSize: 17,
     alignSelf: "center",
-    color: "white",
+    color: "white", 
     marginRight: 10,
   },
   chatIconImage: {
     height: 25,
     width: 30,
     alignSelf: "center",
-    marginLeft: 10,
+    marginLeft: 20,
   },
   heartWrapper: {
     justifyContent: "center",
@@ -470,4 +471,4 @@ const styles = StyleSheet.create({
   },
 });
 
-console.log("userId");
+//.log("userId");

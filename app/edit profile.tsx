@@ -102,7 +102,7 @@ export default function ListScreen() {
         <Text
           style={{
             alignItems: "center",
-            marginLeft: 123,
+            marginLeft: 110,
             fontWeight: "bold",
             fontSize: 20,
           }}

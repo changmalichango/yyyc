@@ -137,7 +137,7 @@ export default function ListingsScreen() {
         <Text
           style={{
             alignItems: "center",
-            marginLeft: 123,
+            marginLeft: 105,
             fontWeight: "bold",
             fontSize: 20,
           }}

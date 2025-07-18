@@ -165,6 +165,22 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        {/* 
+        PENDING REQUEST
+        /////////////////////////////////////////////////////// */}
+        <TouchableOpacity onPress={() => router.replace("/pendingRequests")}>
+          <View style={styles.functionBox}>
+            <Feather name="clock" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Pending Requests</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
+          </View>
+        </TouchableOpacity>
+
         {/* LOG OUT
         ///////////////////////////////////////////////////////////// */}
         <TouchableOpacity
@@ -267,8 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     paddingLeft: 20,
-    marginRight: 170,
-    width: 130,
+    width: 300,
   },
   icons: {
     color: "#E2D7AB",
