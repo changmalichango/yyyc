@@ -59,6 +59,54 @@ export default function PendingRequests() {
     // console.log("Supabase result:", requests);
   };
 
+  const updateStatus = async (id: number, newStatus: "accepted" | "rejected") => {
+  const { error } = await supabase
+    .from("rentalRequest")
+    .update({ status: newStatus })
+    .eq("id", id);
+
+  if (error) {
+    Alert.alert("Error", error.message);
+    return;
+  }
+
+  if (newStatus === "accepted") {
+    const { data: request, error: fetchError } = await supabase
+      .from("rentalRequest")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !request) {
+      Alert.alert("Error fetching request details", fetchError?.message || "No data");
+      return;
+    }
+
+    const { item_id, start_date, end_date, renter_uid, owner_uid } = request;
+
+    const { error: insertError } = await supabase
+      .from("blockedOutDates")
+      .insert([
+        {
+          item_id,
+          start_date,
+          end_date,
+          renter_uid,
+          owner_uid,
+        },
+      ]);
+
+    if (insertError) {
+      Alert.alert("Error blocking out dates", insertError.message);
+      return;
+    }
+  }
+
+  setRequests((prev) => prev.filter((item) => item.id !== id));
+  Alert.alert(`Request ${newStatus}`);
+};
+
+
   type Props = {
     renter_name: string;
     start_date: any;
@@ -88,10 +136,16 @@ export default function PendingRequests() {
       <Text>From: {start_date}</Text>
       <Text>To: {end_date}</Text>
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.button, styles.accept]}>
+        <TouchableOpacity
+          style={[styles.button, styles.accept]}
+          onPress={() => updateStatus(request_id, "accepted")}
+        >
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.reject]}>
+        <TouchableOpacity 
+        style={[styles.button, styles.reject]}
+        onPress={() => updateStatus(request_id, "rejected")}
+        >
           <Text style={styles.buttonText}>Reject</Text>
         </TouchableOpacity>
       </View>
