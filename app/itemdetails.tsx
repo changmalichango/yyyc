@@ -471,4 +471,4 @@ const styles = StyleSheet.create({
   },
 });
 
-//.log("userId");
+//console.log("userId");
