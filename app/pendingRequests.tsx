@@ -4,13 +4,13 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function PendingRequests() {
@@ -28,72 +28,79 @@ export default function PendingRequests() {
     console.log("My UID:", uid);
     if (!uid) return;
 
-    const { data, error } = await supabase
+    const { data: request, error: error1 } = await supabase
       .from("rentalRequest")
       .select("*")
       .eq("owner_uid", uid)
       .eq("status", "pending");
 
-      console.log("Raw rentalRequest data:", data);
-    if (error) {
-      Alert.alert("Error fetching requests", error.message);
+    console.log("Raw rentalRequest data:", request);
+    if (error1) {
+      Alert.alert("Error fetching requests", error1.message);
     } else {
-      setRequests(data);
+      const ids = request?.map((r) => r.item_id) ?? [];
+      const { data: details, error: error2 } = await supabase
+        .from("uploads")
+        .select("*")
+        .in("id", ids);
+
+      if (error2) Alert.alert(error2.message);
+
+      const merged = request.map((r) => {
+        const item = details?.find((i) => i.id === r.item_id);
+        return { ...r, item };
+      });
+
+      setRequests(merged);
+      // console.log("MERGED", merged);
     }
 
     setLoading(false);
-    console.log("Supabase result:", data);
-
+    // console.log("Supabase result:", requests);
   };
 
-
-
   type Props = {
-    renter_uid: string;
+    renter_name: string;
     start_date: any;
-    end_date: any; 
-    id: string;
+    end_date: any;
+    item: string;
     request_id: any;
   };
 
   interface pendingRequests {
-    renter_uid: string;
+    renter_name: string;
     start_date: any;
-    end_date: any; 
-    id: string;
+    end_date: any;
+    item: string;
     request_id: any;
-  };
+  }
 
   const Card: React.FC<Props> = ({
-    renter_uid,
+    renter_name,
     request_id,
-    id,
+    item,
     start_date,
     end_date,
   }) => (
     <View style={styles.card}>
-      <Text style={styles.itemTitle}>Item ID: {id}</Text>
-      <Text>Renter UID: {renter_uid}</Text>
+      <Text style={styles.itemTitle}>Item Name: {item}</Text>
+      <Text>Renter: {renter_name}</Text>
       <Text>From: {start_date}</Text>
       <Text>To: {end_date}</Text>
       <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.button, styles.accept]}
-        >
+        <TouchableOpacity style={[styles.button, styles.accept]}>
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.reject]}
-        >
+        <TouchableOpacity style={[styles.button, styles.reject]}>
           <Text style={styles.buttonText}>Reject</Text>
         </TouchableOpacity>
       </View>
     </View>
-);
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-     <View style={styles.header}>
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
             router.replace("/(tabs)/me");
@@ -109,26 +116,25 @@ export default function PendingRequests() {
             fontSize: 20,
           }}
         >
-            Pending Approval
+          Pending Approval
         </Text>
-        
       </View>
       <FlatList
         data={requests}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => (
-            <Card
-                renter_uid={item.owner_uid}
-                start_date={item.start_date}
-                end_date={item.end_date}
-                id={item.item_id}
-                request_id={item.id}
-                />
+        renderItem={({ item }) => (
+          <Card
+            renter_name={item.item.name}
+            start_date={item.start_date}
+            end_date={item.end_date}
+            item={item.item.item}
+            request_id={item.id}
+          />
         )}
         refreshing={loading}
         onRefresh={fetchRequests}
         ListEmptyComponent={
-        loading ? null : <Text style={styles.empty}>No pending requests</Text>
+          loading ? null : <Text style={styles.empty}>No pending requests</Text>
         }
       />
     </SafeAreaView>
