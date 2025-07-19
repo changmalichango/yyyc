@@ -1,5 +1,7 @@
+import { getUid } from "@/assets/functions";
+import { supabase } from "@/authen/supabase";
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -11,7 +13,7 @@ import {
 } from 'react-native';
 
 
-const rentIn = () => {
+const rentOut = () => {
   
   
   const colorScheme = useColorScheme();
@@ -19,50 +21,95 @@ const rentIn = () => {
   const textColor = colorScheme === "dark" ? styles.textLight : styles.textDark;
   const themeColor =
   colorScheme === "dark" ? styles.darkColor : styles.lightColor;
-  
-  type Props = {
-    Title: string;
-    username: string;
-    image: any;
+  const [itemsLentOut, setItemsLentOut] = useState<any[]>([]);
+  const [mergedList, setMergedList] = useState<any[]>([]);
+
+
+useEffect(() => {
+  const fetchRentOut = async () => {
+    const uid = await getUid();
+    if (!uid) return;
+
+    const {data: uploads, error: uploadsError} = await supabase 
+      .from("uploads")
+      .select("*")
+      .eq("uid", uid);
+
+    const uploadIds = (uploads ?? []).map(item => item.id);
+
+    const { data: rentalOut, error: rentalError } = await supabase
+            .from("blockedOutDates")
+            .select("*")
+            .in("item_id", uploadIds);
+
+    if (uploadsError || rentalError) {
+      console.error("Error fetching data:", uploadsError?.message || rentalError?.message);
+      return;
+    }
+
+    const merged = (rentalOut ?? []).map(r => {
+        const item = (uploads ?? []).find(u => u.id === r.item_id);
+        return {
+          title: item?.title,
+          image_url: item?.image_url,
+          id: r.id,
+          start_date: r.start_date,
+          end_date: r.end_date,
+          renter_uid: r.renter_uid,
+        };
+      });
+
+      setMergedList(merged);
   };
-  const items = [
-    { id: "1", username: 'yyyc', Title: 'ipad', image: require("../../../assets/images/guitar.png") },
-    { id: "2", username: 'yyyc', Title: 'pc', image: require("../../../assets/images/beatrice.png") },
-    { id: "3", username: 'yyyc', Title: 'speaker', image: require("../../../assets/images/sky.png") },
-  ];
+
+  fetchRentOut();
+}, []);  
+
+type Props = {
+    Title: string;
+    renter_username: string;
+    image_url: any;
+    start_date: any;
+    end_date: any;
+};
+
   
     const Box: React.FC<Props> = ({
       Title,
-      username,
-      image,
+      image_url,
+      start_date,
+      end_date,
+      renter_username
     }) => (
       <TouchableOpacity
         onPress={() =>
           router.push({
             pathname: "/itemdetails",
-            params: { Title, image, username},
+            params: { Title, image_url, renter_username},
           })
         }
         style={[styles.box, themeColor]}
       >
-        <Image source={ require("../../../assets/images/guitar.png")} style={styles.image} />
+        <Image source={ {uri: image_url} } style={styles.image} />
           <View>
             <Text style={[styles.itemTitle, styles.itemAndDays, textColor]}>{Title}</Text>
-            <Text style={[styles.username, textColor]}>@{username}</Text>
-            <Text style={[styles.days, styles.itemAndDays, textColor]}>2 Days</Text>
+            <Text style={[styles.username, textColor]}>@{renter_username}</Text>
+            <Text style={[styles.days, styles.itemAndDays, textColor]}>{start_date}-{end_date}</Text>
           </View>
       </TouchableOpacity>
     );
   return (
     <FlatList
             contentContainerStyle={[styles.container, { paddingBottom: 150 }]}
-            data={items}
+            data={mergedList}
             renderItem={({ item }) => (
               <Box
                 Title={item.Title}
-                username={item.username}
-                image= {item.image}
-              />
+                image_url= {item.image}
+                start_date= {item.start_date}
+                end_date= {item.end_date}
+                renter_username={item.renter_username}
+                />
             )}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
@@ -73,7 +120,7 @@ const rentIn = () => {
   )
 }
 
-export default rentIn
+export default rentOut
 
 const styles = StyleSheet.create({
   box:{

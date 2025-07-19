@@ -27,7 +27,7 @@ export default function ExploreTabLayout() {
       <MaterialTopTabs screenOptions={{
         tabBarStyle:{
           shadowOpacity: 0,
-          backgroundColor: 'white,'
+          backgroundColor: 'white',
         }
       }}>
           <MaterialTopTabs.Screen name="Items Lent Out" />

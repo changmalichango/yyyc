@@ -25,7 +25,7 @@ const rentIn = () => {
 
   
   useEffect(() => {
-    const fetchRentOut = async () => {
+    const fetchRentIn = async () => {
       const uid = await getUid();
       if (!uid) return;
 
@@ -36,7 +36,7 @@ const rentIn = () => {
 
       const uploadIds = (uploads ?? []).map(item => item.id);
 
-      const { data: rentalOut, error: rentalError } = await supabase
+      const { data: rentalIn, error: rentalError } = await supabase
         .from("blockedOutDates")
         .select("*")
         .in("item_id", uploadIds);
@@ -46,7 +46,7 @@ const rentIn = () => {
         return;
       }
 
-      const merged = (rentalOut ?? []).map(r => {
+      const merged = (rentalIn ?? []).map(r => {
         const item = (uploads ?? []).find(u => u.id === r.item_id);
         return {
           title: item?.title,
@@ -54,39 +54,37 @@ const rentIn = () => {
           id: r.id,
           start_date: r.start_date,
           end_date: r.end_date,
-          renter_uid: r.renter_uid,
+          owner_uid: r.owner_uid,
         };
       });
 
       setMergedList(merged);
     };
 
-    fetchRentOut();
+    fetchRentIn();
   }, []);
   
   
   type Props = {
     Title: string;
-    username: string;
     image_url: any
     start_date: any;
     end_date: any;
-    renter_uid: string;
+    owner_username: string;
   };
   
     const Box: React.FC<Props> = ({
       Title,
-      username,
       image_url,
       start_date,
       end_date,
-      renter_uid
+      owner_username
     }) => (
       <TouchableOpacity
         onPress={() =>
           router.push({
             pathname: "/itemdetails",
-            params: { Title, image_url, username},
+            params: { Title, image_url, owner_username},
           })
         }
         style={[styles.box, themeColor]}
@@ -94,7 +92,7 @@ const rentIn = () => {
         <Image source={{ uri: image_url }} style={styles.image} />
           <View>
             <Text style={[styles.itemTitle, styles.itemAndDays, textColor]}>{Title}</Text>
-            <Text style={[styles.username, textColor]}>@{username}</Text>
+            <Text style={[styles.username, textColor]}>@{owner_username}</Text>
             <Text style={[styles.days, styles.itemAndDays, textColor]}>{start_date}-{end_date}</Text>
           </View>
       </TouchableOpacity>
@@ -106,11 +104,10 @@ const rentIn = () => {
             renderItem={({ item }) => (
               <Box
                 Title={item.Title}
-                username={item.username}
                 image_url= {item.image}
                 start_date= {item.start_date}
                 end_date= {item.end_date}
-                renter_uid= {item.renter_uid}
+                owner_username= {item.owner_username}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
