@@ -35,40 +35,51 @@ export default function ItemDetailsScreen() {
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const [userId, setUserId] = useState<string | null>(null);
-  const { Title, price, image_url, rate, description, user_uid, id } =
-    useLocalSearchParams();
+  const {
+    Title,
+    price,
+    image_url,
+    rate,
+    description,
+    user_uid,
+    id,
+    condition,
+    address,
+  } = useLocalSearchParams();
+
+  console.log(condition, address, rate);
   const [selectedRange, setSelectedRange] = useState({});
-const [startDate, setStartDate] = useState<string | null>(null);
-const [endDate, setEndDate] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
 
-interface MarkedDate {
-  color: string;
-  textColor: string;
-  startingDay?: boolean;
-  endingDay?: boolean;
-}
-
-type MarkedRange = Record<string, MarkedDate>;
-
-const getMarkedRange = (start: string, end: string): MarkedRange => {
-  let range: MarkedRange = {};
-  let startD = new Date(start);
-  let endD = new Date(end);
-
-  while (startD <= endD) {
-    const dateStr = startD.toISOString().split('T')[0];
-    range[dateStr] = {
-      color: 'green',
-      textColor: 'white'
-    };
-    startD.setDate(startD.getDate() + 1);
+  interface MarkedDate {
+    color: string;
+    textColor: string;
+    startingDay?: boolean;
+    endingDay?: boolean;
   }
 
-  range[start] = { startingDay: true, color: 'green', textColor: 'white' };
-  range[end] = { endingDay: true, color: 'green', textColor: 'white' };
+  type MarkedRange = Record<string, MarkedDate>;
 
-  return range;
-};
+  const getMarkedRange = (start: string, end: string): MarkedRange => {
+    let range: MarkedRange = {};
+    let startD = new Date(start);
+    let endD = new Date(end);
+
+    while (startD <= endD) {
+      const dateStr = startD.toISOString().split("T")[0];
+      range[dateStr] = {
+        color: "green",
+        textColor: "white",
+      };
+      startD.setDate(startD.getDate() + 1);
+    }
+
+    range[start] = { startingDay: true, color: "green", textColor: "white" };
+    range[end] = { endingDay: true, color: "green", textColor: "white" };
+
+    return range;
+  };
 
   // console.log(user_uid);
   useEffect(() => {
@@ -186,11 +197,10 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
             .single();
 
           if (error2) Alert.alert(error2.message);
-          else //console.log("created new chat");
-          console.log(table.id);
+          //console.log("created new chat");
+          else console.log(table.id);
         } else {
           //console.log("chat existed");
-
           //console.log(existence.id);
         }
       }
@@ -218,8 +228,8 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
         <Text
           style={{
             alignItems: "center",
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            flexDirection: "row",
+            justifyContent: "space-between",
             fontWeight: "bold",
             fontSize: 20,
           }}
@@ -235,91 +245,91 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
           ${price} per {rate}
         </Text>
         <Text style={[styles.condition, textColor]}>Condition</Text>
-        <Text style={[styles.actualCondition, textColor]}>9</Text>
+        <Text style={[styles.actualCondition, textColor]}>{condition}</Text>
         <Text style={[styles.details, textColor]}>Description</Text>
         <Text style={[styles.description, textColor]}>{description}</Text>
         <Text style={[styles.location, textColor]}>Location</Text>
-        <Text style={[styles.mrt, textColor]}>Sengkang</Text>
+        <Text style={[styles.mrt, textColor]}>{address}</Text>
 
         <View style={{ padding: 15 }}>
-        <Text>Select your proposed rental dates:</Text>
-        <Calendar
-          markingType={'period'}
-          markedDates={selectedRange}
-          onDayPress={(day) => {
-            if (!startDate) {
-              setStartDate(day.dateString);
-              setSelectedRange({
-                [day.dateString]: {
-                  startingDay: true,
-                  color: 'green',
-                  textColor: 'white',
-                }
-              });
-            } else if (!endDate) {
-              setEndDate(day.dateString);
-              const newRange = getMarkedRange(startDate, day.dateString);
-              setSelectedRange(newRange);
-            } else {
-              // reset
-              setStartDate(null);
-              setEndDate(null);
-              setSelectedRange({});
-            }
-          }}
-        />
+          <Text>Select your proposed rental dates:</Text>
+          <Calendar
+            markingType={"period"}
+            markedDates={selectedRange}
+            onDayPress={(day) => {
+              if (!startDate) {
+                setStartDate(day.dateString);
+                setSelectedRange({
+                  [day.dateString]: {
+                    startingDay: true,
+                    color: "green",
+                    textColor: "white",
+                  },
+                });
+              } else if (!endDate) {
+                setEndDate(day.dateString);
+                const newRange = getMarkedRange(startDate, day.dateString);
+                setSelectedRange(newRange);
+              } else {
+                // reset
+                setStartDate(null);
+                setEndDate(null);
+                setSelectedRange({});
+              }
+            }}
+          />
 
-  <Text>Start Date: {startDate ?? 'Not selected'}</Text>
-  <Text>End Date: {endDate ?? 'Not selected'}</Text>
+          <Text>Start Date: {startDate ?? "Not selected"}</Text>
+          <Text>End Date: {endDate ?? "Not selected"}</Text>
 
-  <TouchableOpacity
-    style={{
-      marginTop: 10,
-      padding: 10,
-      backgroundColor: 'green',
-      borderRadius: 5,
-      alignItems: 'center',
-    }}
-    onPress={async () => {
-      if (!startDate || !endDate) {
-        Alert.alert('Please select a start and end date first!');
-        return;
-      }
+          <TouchableOpacity
+            style={{
+              marginTop: 10,
+              padding: 10,
+              backgroundColor: "green",
+              borderRadius: 5,
+              alignItems: "center",
+            }}
+            onPress={async () => {
+              if (!startDate || !endDate) {
+                Alert.alert("Please select a start and end date first!");
+                return;
+              }
 
-      const uid = await getUid();
+              const uid = await getUid();
 
-      if (!uid || !id) {
-        Alert.alert('Error: missing user or item ID');
-        return;
-      }
+              if (!uid || !id) {
+                Alert.alert("Error: missing user or item ID");
+                return;
+              }
 
-      const { error } = await supabase
-        .from('rentalRequest')
-        .insert([
-          {
-            item_id: id,
-            start_date: startDate,
-            end_date: endDate,
-            renter_uid: await getUid(),
-            owner_uid: user_uid,
-            status: 'pending',
-          }
-        ]);
+              const { error } = await supabase.from("rentalRequest").insert([
+                {
+                  item_id: id,
+                  start_date: startDate,
+                  end_date: endDate,
+                  renter_uid: await getUid(),
+                  owner_uid: user_uid,
+                  status: "pending",
+                },
+              ]);
 
-      if (error) {
-        console.log("❌ Supabase error:", error);
-        Alert.alert('Error saving dates', error.message);
-      } else {
-        Alert.alert('Request Sent!');
-        setStartDate(null);
-        setEndDate(null);
-        setSelectedRange({});
-      }
-    }}
-  >
-    <Text style={{ color: 'white', fontWeight: 'bold' }}>Send Booking Request</Text>
-  </TouchableOpacity>
-</View>
+              if (error) {
+                console.log("❌ Supabase error:", error);
+                Alert.alert("Error saving dates", error.message);
+              } else {
+                Alert.alert("Request Sent!");
+                setStartDate(null);
+                setEndDate(null);
+                setSelectedRange({});
+              }
+            }}
+          >
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              Send Booking Request
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
       <View style={[styles.bottomSection]}>
@@ -448,7 +458,7 @@ const styles = StyleSheet.create({
   chatText: {
     fontSize: 17,
     alignSelf: "center",
-    color: "white", 
+    color: "white",
     marginRight: 10,
   },
   chatIconImage: {

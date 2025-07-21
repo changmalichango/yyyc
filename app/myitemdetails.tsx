@@ -12,7 +12,7 @@ import {
   Text,
   TouchableOpacity,
   useColorScheme,
-  View
+  View,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import {
@@ -33,40 +33,50 @@ export default function ItemDetailsScreen() {
   const themeColor =
     colorScheme === "dark" ? styles.darkColor : styles.lightColor;
   const [userId, setUserId] = useState<string | null>(null);
-  const { Title, price, image_url, rate, description, user_uid, id } =
-    useLocalSearchParams();
+  const {
+    Title,
+    price,
+    image_url,
+    rate,
+    description,
+    user_uid,
+    id,
+    address,
+    condition,
+  } = useLocalSearchParams();
+  console.log("hereee", address, condition);
   const [selectedRange, setSelectedRange] = useState({});
-const [startDate, setStartDate] = useState<string | null>(null);
-const [endDate, setEndDate] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
 
-interface MarkedDate {
-  color: string;
-  textColor: string;
-  startingDay?: boolean;
-  endingDay?: boolean;
-}
-
-type MarkedRange = Record<string, MarkedDate>;
-
-const getMarkedRange = (start: string, end: string): MarkedRange => {
-  let range: MarkedRange = {};
-  let startD = new Date(start);
-  let endD = new Date(end);
-
-  while (startD <= endD) {
-    const dateStr = startD.toISOString().split('T')[0];
-    range[dateStr] = {
-      color: 'green',
-      textColor: 'white'
-    };
-    startD.setDate(startD.getDate() + 1);
+  interface MarkedDate {
+    color: string;
+    textColor: string;
+    startingDay?: boolean;
+    endingDay?: boolean;
   }
 
-  range[start] = { startingDay: true, color: 'green', textColor: 'white' };
-  range[end] = { endingDay: true, color: 'green', textColor: 'white' };
+  type MarkedRange = Record<string, MarkedDate>;
 
-  return range;
-};
+  const getMarkedRange = (start: string, end: string): MarkedRange => {
+    let range: MarkedRange = {};
+    let startD = new Date(start);
+    let endD = new Date(end);
+
+    while (startD <= endD) {
+      const dateStr = startD.toISOString().split("T")[0];
+      range[dateStr] = {
+        color: "green",
+        textColor: "white",
+      };
+      startD.setDate(startD.getDate() + 1);
+    }
+
+    range[start] = { startingDay: true, color: "green", textColor: "white" };
+    range[end] = { endingDay: true, color: "green", textColor: "white" };
+
+    return range;
+  };
 
   console.log(user_uid);
   useEffect(() => {
@@ -144,8 +154,6 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
     });
   };
 
-  
-
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -183,112 +191,113 @@ const getMarkedRange = (start: string, end: string): MarkedRange => {
           ${price} per {rate}
         </Text>
         <Text style={[styles.condition, textColor]}>Condition</Text>
-        <Text style={[styles.actualCondition, textColor]}>9</Text>
+        <Text style={[styles.actualCondition, textColor]}>{condition}</Text>
         <Text style={[styles.details, textColor]}>Description</Text>
         <Text style={[styles.description, textColor]}>{description}</Text>
         <Text style={[styles.location, textColor]}>Location</Text>
-        <Text style={[styles.mrt, textColor]}>Sengkang</Text>
+        <Text style={[styles.mrt, textColor]}>{address}</Text>
 
         <View style={{ padding: 15 }}>
-        <Text>Select your proposed rental dates:</Text>
-        <Calendar
-          markingType={'period'}
-          markedDates={selectedRange}
-          onDayPress={(day) => {
-            if (!startDate) {
-              setStartDate(day.dateString);
-              setSelectedRange({
-                [day.dateString]: {
-                  startingDay: true,
-                  color: 'green',
-                  textColor: 'white',
-                }
-              });
-            } else if (!endDate) {
-              setEndDate(day.dateString);
-              const newRange = getMarkedRange(startDate, day.dateString);
-              setSelectedRange(newRange);
-            } else {
-              // reset
-              setStartDate(null);
-              setEndDate(null);
-              setSelectedRange({});
-            }
-          }}
-        />
+          <Text>Select your proposed rental dates:</Text>
+          <Calendar
+            markingType={"period"}
+            markedDates={selectedRange}
+            onDayPress={(day) => {
+              if (!startDate) {
+                setStartDate(day.dateString);
+                setSelectedRange({
+                  [day.dateString]: {
+                    startingDay: true,
+                    color: "green",
+                    textColor: "white",
+                  },
+                });
+              } else if (!endDate) {
+                setEndDate(day.dateString);
+                const newRange = getMarkedRange(startDate, day.dateString);
+                setSelectedRange(newRange);
+              } else {
+                // reset
+                setStartDate(null);
+                setEndDate(null);
+                setSelectedRange({});
+              }
+            }}
+          />
 
-  <Text>Start Date: {startDate ?? 'Not selected'}</Text>
-  <Text>End Date: {endDate ?? 'Not selected'}</Text>
+          <Text>Start Date: {startDate ?? "Not selected"}</Text>
+          <Text>End Date: {endDate ?? "Not selected"}</Text>
 
-  <TouchableOpacity
-    style={{
-      marginTop: 10,
-      padding: 10,
-      backgroundColor: 'green',
-      borderRadius: 5,
-      alignItems: 'center',
-    }}
-    onPress={async () => {
-  console.log('✅ Edit Available Dates button pressed');
+          <TouchableOpacity
+            style={{
+              marginTop: 10,
+              padding: 10,
+              backgroundColor: "green",
+              borderRadius: 5,
+              alignItems: "center",
+            }}
+            onPress={async () => {
+              console.log("✅ Edit Available Dates button pressed");
 
-  if (!startDate || !endDate) {
-    Alert.alert('Please select a start and end date first!');
-    return;
-  }
+              if (!startDate || !endDate) {
+                Alert.alert("Please select a start and end date first!");
+                return;
+              }
 
-  const uid = await getUid();
+              const uid = await getUid();
 
-  if (!uid || !id) {
-    Alert.alert('Error: missing user or item ID');
-    return;
-  }
+              if (!uid || !id) {
+                Alert.alert("Error: missing user or item ID");
+                return;
+              }
 
+              // 1️⃣ DELETE all existing blocked dates for this item
+              const { error: deleteError } = await supabase
+                .from("blockedOutDates")
+                .delete()
+                .eq("item_id", id);
 
-    // 1️⃣ DELETE all existing blocked dates for this item
-    const { error: deleteError } = await supabase
-      .from('blockedOutDates')
-      .delete()
-      .eq('item_id', id);
+              if (deleteError) {
+                console.log("❌ Delete error:", deleteError);
+                Alert.alert(
+                  "Error clearing existing dates",
+                  deleteError.message
+                );
+                return;
+              }
 
-    if (deleteError) {
-      console.log('❌ Delete error:', deleteError);
-      Alert.alert('Error clearing existing dates', deleteError.message);
-      return;
-    }
+              console.log("✅ Inserting new blocked date:", startDate, endDate);
 
-    console.log('✅ Inserting new blocked date:', startDate, endDate);
+              // 2️⃣ INSERT new blocked date
+              const { error: insertError } = await supabase
+                .from("blockedOutDates")
+                .insert([
+                  {
+                    item_id: id,
+                    owner_uid: uid,
+                    start_date: startDate,
+                    end_date: endDate,
+                  },
+                ]);
 
-    // 2️⃣ INSERT new blocked date
-    const { error: insertError } = await supabase
-      .from('blockedOutDates')
-      .insert([
-        {
-          item_id: id,
-          owner_uid: uid,
-          start_date: startDate,
-          end_date: endDate,
-        }
-      ]);
-
-    if (insertError) {
-      console.log('❌ Insert error:', insertError);
-      Alert.alert('Error saving new dates', insertError.message);
-    } else {
-      console.log('✅ Dates updated successfully!');
-      Alert.alert('Dates updated successfully!');
-      setStartDate(null);
-      setEndDate(null);
-      setSelectedRange({});
-
-
-  }
-}}
-
-  >
-    <Text style={{ color: 'white', fontWeight: 'bold' }}>Edit Dates Available</Text>
-    </TouchableOpacity>
+              if (insertError) {
+                console.log("❌ Insert error:", insertError);
+                Alert.alert("Error saving new dates", insertError.message);
+              } else {
+                console.log("✅ Dates updated successfully!");
+                Alert.alert("Dates updated successfully!");
+                setStartDate(null);
+                setEndDate(null);
+                setSelectedRange({});
+              }
+            }}
+          >
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              Edit Dates Available
+            </Text>
+          </TouchableOpacity>
         </View>
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }

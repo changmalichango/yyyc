@@ -28,6 +28,8 @@ export default function FavouritesScreen() {
   type ListingOrPlaceholder = ListingItem | { id: string; isPlaceholder: true };
 
   interface ListingItem {
+    condition: string;
+    address: string;
     id: string;
     item: string;
     price: number;
@@ -72,8 +74,8 @@ export default function FavouritesScreen() {
 
     const ids = list?.map((item) => item.item_id);
     // console.log(user.id);
-    console.log("here");
-    console.log(ids);
+    // console.log("here");
+    // console.log(ids);
     if (error1) {
       Alert.alert(error1.message);
     }
@@ -85,6 +87,7 @@ export default function FavouritesScreen() {
     if (error2) {
       Alert.alert(error2.message);
     } else {
+    //   console.log("ITEMS", itemList);
       setListing(itemList);
     }
   };
@@ -106,6 +109,8 @@ export default function FavouritesScreen() {
     image_url: any;
     rate: string;
     description: string;
+    condition: string;
+    address: string;
   };
   const Card: React.FC<Props> = ({
     Title,
@@ -114,6 +119,8 @@ export default function FavouritesScreen() {
     image_url,
     rate,
     description,
+    condition,
+    address,
   }) => (
     <TouchableOpacity
       onPress={() =>
@@ -125,6 +132,8 @@ export default function FavouritesScreen() {
             image_url,
             rate,
             description,
+            condition,
+            address,
           },
         })
       }
@@ -174,6 +183,8 @@ export default function FavouritesScreen() {
               username={item.name}
               image_url={item.image_url}
               description={item.description}
+              address={item.address}
+              condition={item.condition}
             />
           )
         }

@@ -76,6 +76,8 @@ export default function ListingsScreen() {
   type ListingOrPlaceholder = ListingItem | { id: string; isPlaceholder: true };
 
   interface ListingItem {
+    condition: string;
+    address: string;
     id: string;
     item: string;
     price: number;
@@ -123,6 +125,7 @@ export default function ListingsScreen() {
     if (error) {
       Alert.alert(error.message);
     } else {
+      // console.log("IAHDIAHD", list);
       setListing(list);
     }
   };
@@ -146,6 +149,8 @@ export default function ListingsScreen() {
     description: string;
     user_uid: string;
     id: string;
+    condition: string;
+    address: string;
   };
 
   const Card: React.FC<Props> = ({
@@ -157,6 +162,8 @@ export default function ListingsScreen() {
     description,
     user_uid,
     id,
+    condition,
+    address,
   }) => (
     <TouchableOpacity
       onPress={() =>
@@ -170,6 +177,8 @@ export default function ListingsScreen() {
             description,
             user_uid,
             id,
+            address,
+            condition,
           },
         })
       }
@@ -237,6 +246,8 @@ export default function ListingsScreen() {
               description={item.description}
               user_uid={item.uid}
               id={item.id}
+              address={item?.address}
+              condition={item.condition}
             />
           )
         }
