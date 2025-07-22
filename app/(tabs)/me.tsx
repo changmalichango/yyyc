@@ -14,6 +14,8 @@ import {
   View,
 } from "react-native";
 
+import Octicons from "@expo/vector-icons/Octicons";
+
 export default function MeScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -134,10 +136,14 @@ USER NAME AND EMAIL */}
         {/* 
         FAV 
         ////////////////////////////////////////////////////////////////////////// */}
-        <TouchableOpacity onPress={() =>
-          router.push({
-            pathname: "/favourites", })}>
-         <View style={styles.functionBox}>
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/favourites",
+            })
+          }
+        >
+          <View style={styles.functionBox}>
             <Feather name="heart" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Favourites</Text>
             <Feather
@@ -181,6 +187,18 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => router.replace("/pendingRequests")}>
+          <View style={styles.functionBox}>
+            <Octicons name="shield-check" size={24} style={styles.icons} />
+            <Text style={[textColor, styles.boxText]}>Purchase Insurance</Text>
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={"green"}
+              style={{ paddingRight: 15 }}
+            />
+          </View>
+        </TouchableOpacity>
         {/* LOG OUT
         ///////////////////////////////////////////////////////////// */}
         <TouchableOpacity

@@ -48,16 +48,22 @@ const RentOut = () => {
 
       const merged = (rentalOut ?? []).map((r) => {
         const item = (uploads ?? []).find((u) => u.id === r.item_id);
-        console.log("item is here", item);
+        // console.log("item is here", item);
         return {
           title: item?.title,
           image_url: item?.image_url,
           id: r.id,
           item: item?.item,
           renter: item?.name,
+          insurance: r.insurance,
           start_date: r.start_date,
           end_date: r.end_date,
           renter_uid: r.renter_uid,
+          condition: item.condition,
+          price: item.price,
+          rate: item.duration,
+          decription: item.description,
+          address: item.address,
         };
       });
 
@@ -74,6 +80,12 @@ const RentOut = () => {
     image_url: any;
     start_date: any;
     end_date: any;
+    condition: string;
+    price: string;
+    rate: string;
+    decription: string;
+    address: string;
+    insurance: string;
   };
 
   const Box: React.FC<Props> = ({
@@ -82,12 +94,27 @@ const RentOut = () => {
     start_date,
     end_date,
     renter_username,
+    condition,
+    price,
+    address,
+    rate,
+    decription,
+    insurance,
   }) => (
     <TouchableOpacity
       onPress={() =>
         router.push({
           pathname: "/itemdetails",
-          params: { Title, image_url, renter_username },
+          params: {
+            Title,
+            image_url,
+            renter_username,
+            condition,
+            price,
+            address,
+            rate,
+            decription,
+          },
         })
       }
       style={[styles.box, themeColor]}
@@ -101,6 +128,10 @@ const RentOut = () => {
         <Text style={[styles.days, styles.itemAndDays, textColor]}>
           {start_date}-{end_date}
         </Text>
+
+        <View style={insurance ? styles.insurebox : styles.notinsurebox}>
+          <Text>{insurance ? "insured" : "not insured"}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -115,6 +146,12 @@ const RentOut = () => {
           start_date={item.start_date}
           end_date={item.end_date}
           renter_username={item.renter}
+          condition={item.condition}
+          price={item.price}
+          address={item.address}
+          decription={item.description}
+          rate={item.rate}
+          insurance={item.insurance}
         />
       )}
       keyExtractor={(item) => item.id.toString()}
@@ -136,6 +173,7 @@ const styles = StyleSheet.create({
     borderColor: "green",
     alignItems: "flex-start",
     flexDirection: "row",
+    paddingTop: 15,
   },
   details: {},
   lightColor: { backgroundColor: "#fff" },
@@ -167,7 +205,8 @@ const styles = StyleSheet.create({
     width: "20%",
     height: "100%",
     paddingBottom: 5,
-    marginTop: 2,
+    // marginTop: 2,
+    marginRight: 10,
   },
   days: {
     fontSize: 14,
@@ -175,6 +214,19 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   container: {
+    alignItems: "center",
+  },
+  insurebox: {
+    backgroundColor: "green",
+    borderRadius: 20,
+    width: 60,
+    alignItems: "center",
+  },
+
+  notinsurebox: {
+    backgroundColor: "orange",
+    borderRadius: 20,
+    width: 80,
     alignItems: "center",
   },
 });

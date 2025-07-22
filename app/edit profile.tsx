@@ -90,7 +90,6 @@ export default function ListScreen() {
 
   return (
     <SafeAreaView style={[styles.container, styleColor]}>
-      
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -110,7 +109,7 @@ export default function ListScreen() {
           Edit Profile
         </Text>
       </View>
-      
+
       <ScrollView style={styles.container2}>
         <View>
           <Text style={[textColor, styles.textOnBox]}>Username</Text>
@@ -281,7 +280,8 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     justifyContent: "center",
     alignItems: "center",
-  },header: {
+  },
+  header: {
     backgroundColor: "green",
     flexDirection: "row",
     justifyContent: "flex-start",
