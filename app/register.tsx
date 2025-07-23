@@ -32,40 +32,40 @@ export default function RegisterScreen() {
   };
 
   return (
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>Register</Text>
-        </View>
-
-        <View>
-          <Text style={styles.subtext}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor={"black"}
-            value={email}
-            keyboardType="email-address"
-            onChangeText={setEmail}
-          />
-        </View>
-
-        <View>
-          <Text style={styles.subtext}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={"black"}
-            value={password}
-            secureTextEntry
-            onChangeText={setPassword}
-          />
-        </View>
-        <View>
-          <TouchableOpacity onPress={handleRegister}>
-            <Text style={styles.button}>Sign in</Text>
-          </TouchableOpacity>
-        </View>
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.title}>Register</Text>
       </View>
+
+      <View>
+        <Text style={styles.subtext}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={"black"}
+          value={email}
+          keyboardType="email-address"
+          onChangeText={setEmail}
+        />
+      </View>
+
+      <View>
+        <Text style={styles.subtext}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={"black"}
+          value={password}
+          secureTextEntry
+          onChangeText={setPassword}
+        />
+      </View>
+      <View>
+        <TouchableOpacity onPress={handleRegister}>
+          <Text style={styles.button}>Sign in</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 

@@ -187,7 +187,7 @@ USER NAME AND EMAIL */}
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.replace("/pendingRequests")}>
+        <TouchableOpacity onPress={() => router.replace("/purchaseInsurance")}>
           <View style={styles.functionBox}>
             <Octicons name="shield-check" size={24} style={styles.icons} />
             <Text style={[textColor, styles.boxText]}>Purchase Insurance</Text>

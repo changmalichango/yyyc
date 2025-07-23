@@ -38,7 +38,7 @@ const RentIn = () => {
       const { data: uploads, error: uploadsError } = await supabase
         .from("uploads")
         .select("*")
-        .in("uid", [uidList]);
+        .in("uid", uidList);
 
       // console.log("IAJDIAJDI", uploads);
 
