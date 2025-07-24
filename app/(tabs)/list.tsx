@@ -204,7 +204,7 @@ export default function ListScreen() {
           <View style={{ flexDirection: "row" }}>
             <Text style={[textColor, styles.textOnBox]}>Image</Text>
             <Text style={{ marginTop: 15, color: "grey" }}>
-              (maximum of 3 images)
+              (maximum of 1 image)
             </Text>
           </View>
 

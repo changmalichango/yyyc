@@ -28,11 +28,10 @@ export default function LoginScreen() {
       Alert.alert(error.message);
     } else {
       Alert.alert("Success", "Logged in!");
-     
-     
+
       // CHECKING IF USER HAVE USERNAME
       // ////////////////////////////////////////////////
-      
+
       const username = await getName();
       console.log(username);
       if (!username) {
@@ -78,7 +77,7 @@ export default function LoginScreen() {
         </View>
 
         <View>
-          <TouchableOpacity onPress={() => router.replace("/home")}>
+          <TouchableOpacity>
             <Text style={styles.forget}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   forget: {
-    color: "#73c2fb",
+    color: "transparent",
     marginLeft: 270,
     marginBottom: 20,
   },

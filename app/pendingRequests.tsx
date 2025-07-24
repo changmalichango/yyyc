@@ -34,7 +34,9 @@ export default function PendingRequests() {
       .eq("owner_uid", uid)
       .eq("status", "pending");
 
-    console.log("Raw rentalRequest data:", request);
+    // console.log("resqqq", request);
+
+    // console.log("Raw rentalRequest data:", request);
     if (error1) {
       Alert.alert("Error fetching requests", error1.message);
     } else {
@@ -44,13 +46,25 @@ export default function PendingRequests() {
         .select("*")
         .in("id", ids);
 
+      // console.log("idsss", ids);
+      // console.log("detailsss", details);
+
       if (error2) Alert.alert(error2.message);
 
+      const renterUids = request.map((r) => r.renter_uid);
+      const { data: renters, error: rentersError } = await supabase
+        .from("users")
+        .select("uid,name")
+        .in("uid", renterUids);
+
+      // console.log("renters", renters);
       const merged = request.map((r) => {
         const item = details?.find((i) => i.id === r.item_id);
-        return { ...r, item };
+        const renter = renters?.find((u) => u.uid === r.renter_uid);
+        return { ...r, item, renter_name: renter?.name };
       });
 
+      console.log("fix bug", merged);
       setRequests(merged);
       // console.log("MERGED", merged);
     }
@@ -59,53 +73,58 @@ export default function PendingRequests() {
     // console.log("Supabase result:", requests);
   };
 
-  const updateStatus = async (id: number, newStatus: "accepted" | "rejected") => {
-  const { error } = await supabase
-    .from("rentalRequest")
-    .update({ status: newStatus })
-    .eq("id", id);
-
-  if (error) {
-    Alert.alert("Error", error.message);
-    return;
-  }
-
-  if (newStatus === "accepted") {
-    const { data: request, error: fetchError } = await supabase
+  const updateStatus = async (
+    id: number,
+    newStatus: "accepted" | "rejected"
+  ) => {
+    const { error } = await supabase
       .from("rentalRequest")
-      .select("*")
-      .eq("id", id)
-      .single();
+      .update({ status: newStatus })
+      .eq("id", id);
 
-    if (fetchError || !request) {
-      Alert.alert("Error fetching request details", fetchError?.message || "No data");
+    if (error) {
+      Alert.alert("Error", error.message);
       return;
     }
 
-    const { item_id, start_date, end_date, renter_uid, owner_uid } = request;
+    if (newStatus === "accepted") {
+      const { data: request, error: fetchError } = await supabase
+        .from("rentalRequest")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    const { error: insertError } = await supabase
-      .from("blockedOutDates")
-      .insert([
-        {
-          item_id,
-          start_date,
-          end_date,
-          renter_uid,
-          owner_uid,
-        },
-      ]);
+      if (fetchError || !request) {
+        Alert.alert(
+          "Error fetching request details",
+          fetchError?.message || "No data"
+        );
+        return;
+      }
 
-    if (insertError) {
-      Alert.alert("Error blocking out dates", insertError.message);
-      return;
+      const { item_id, start_date, end_date, renter_uid, owner_uid } = request;
+
+      const { error: insertError } = await supabase
+        .from("blockedOutDates")
+        .insert([
+          {
+            item_id,
+            start_date,
+            end_date,
+            renter_uid,
+            owner_uid,
+          },
+        ]);
+
+      if (insertError) {
+        Alert.alert("Error blocking out dates", insertError.message);
+        return;
+      }
     }
-  }
 
-  setRequests((prev) => prev.filter((item) => item.id !== id));
-  Alert.alert(`Request ${newStatus}`);
-};
-
+    setRequests((prev) => prev.filter((item) => item.id !== id));
+    Alert.alert(`Request ${newStatus}`);
+  };
 
   type Props = {
     renter_name: string;
@@ -138,13 +157,13 @@ export default function PendingRequests() {
       <View style={styles.buttonRow}>
         <TouchableOpacity
           style={[styles.button, styles.accept]}
-          onPress={() => updateStatus(request_id, "accepted")}
+          onPress={async () => await updateStatus(request_id, "accepted")}
         >
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-        style={[styles.button, styles.reject]}
-        onPress={() => updateStatus(request_id, "rejected")}
+        <TouchableOpacity
+          style={[styles.button, styles.reject]}
+          onPress={async () => await updateStatus(request_id, "rejected")}
         >
           <Text style={styles.buttonText}>Reject</Text>
         </TouchableOpacity>
@@ -178,7 +197,7 @@ export default function PendingRequests() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Card
-            renter_name={item.item.name}
+            renter_name={item.renter_name}
             start_date={item.start_date}
             end_date={item.end_date}
             item={item.item.item}
