@@ -38,6 +38,8 @@ const RentOut = () => {
         .select("*")
         .in("item_id", uploadIds);
 
+      console.log("dadya", rentalOut);
+
       if (uploadsError || rentalError) {
         console.error(
           "Error fetching data:",
@@ -46,8 +48,18 @@ const RentOut = () => {
         return;
       }
 
+      const borrower_uid = rentalOut.map((r) => r.renter_uid);
+
+      const { data: borrow, error: borrowError } = await supabase
+        .from("users")
+        .select("uid,name")
+        .in("uid", borrower_uid);
+
+      // console.log("names", borrow);
+
       const merged = (rentalOut ?? []).map((r) => {
         const item = (uploads ?? []).find((u) => u.id === r.item_id);
+        const renter = borrow?.find((u) => u.uid === r.renter_uid);
         // console.log("item is here", item);
         return {
           title: item?.title,
@@ -64,11 +76,12 @@ const RentOut = () => {
           rate: item.duration,
           decription: item.description,
           address: item.address,
+          borrow: renter?.name,
         };
       });
 
       setMergedList(merged);
-      // console.log("HAHAHAHAH", merged);
+      console.log("HAHAHAHAH", merged);
     };
 
     fetchRentOut();
@@ -145,7 +158,7 @@ const RentOut = () => {
           image_url={item.image_url}
           start_date={item.start_date}
           end_date={item.end_date}
-          renter_username={item.renter}
+          renter_username={item.borrow}
           condition={item.condition}
           price={item.price}
           address={item.address}
